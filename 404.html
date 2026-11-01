@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Название вашего проекта</title>
+<script>
+  // =====================================================================
+  //  НАСТРОЙКИ САЙТА. Меняйте тексты здесь, остальной код трогать не нужно.
+  // =====================================================================
+  // Адрес бэкенда на Amvera (обязательно https://)
+  window.API_URL = 'https://demo-platform-stavka.waw0.amvera.tech';
+
+  window.SITE = {
+    brand: 'НАЗВАНИЕ',              // крупно в шапке
+    brandSub: 'вашего проекта',     // мелко под названием
+    company: 'ИП «Брагин Антон Владимирович»',
+    inn: '731304543979',
+    email: 'почтапроекта@gmail.com',
+
+    // 1. Главный экран: название и описание проекта
+    hero: {
+      eyebrow: 'Онлайн-курс · старт потока скоро',
+      title: 'Название вашего проекта',
+      text: 'Короткое описание проекта в одно-два предложения. Расскажите, какую задачу решает курс, для кого он и какой результат получит ученик после обучения.',
+      stats: [['6 недель', 'длительность курса'], ['24 урока', 'видео и практика'], ['24/7', 'доступ к материалам']],
+    },
+
+    // 2. Рассказ о блогере-эксперте
+    expert: {
+      title: 'Об авторе курса',
+      name: 'Имя Фамилия эксперта',
+      role: 'Блогер и практикующий эксперт в своей нише',
+      initials: 'ИФ',
+      text: [
+        'Здесь рассказ об эксперте: с чего он начинал, чем занимается сейчас и почему ему можно доверять. Два-три предложения о личной истории и пути в профессии.',
+        'Второй абзац о подходе: что отличает его метод от других, каких результатов добились ученики и подписчики блога.',
+      ],
+      facts: [['5 000+', 'подписчиков в блоге'], ['7 лет', 'практики в нише'], ['300+', 'довольных учеников']],
+    },
+
+    // 3. Программа курса
+    program: {
+      title: 'Программа курса',
+      text: 'Пошаговая программа: от основ до первого результата. Каждый модуль заканчивается практическим заданием с обратной связью.',
+      modules: [
+        ['Модуль 1', 'Название первого модуля', 'Коротко о том, что ученик узнает и чему научится в этом модуле.'],
+        ['Модуль 2', 'Название второго модуля', 'Коротко о том, что ученик узнает и чему научится в этом модуле.'],
+        ['Модуль 3', 'Название третьего модуля', 'Коротко о том, что ученик узнает и чему научится в этом модуле.'],
+        ['Модуль 4', 'Название четвёртого модуля', 'Коротко о том, что ученик узнает и чему научится в этом модуле.'],
+      ],
+    },
+
+    // 4. Для кого курс и что получит ученик
+    benefits: {
+      title: 'Для кого этот курс',
+      who: ['Для тех, кто только начинает и хочет разобраться с нуля', 'Для тех, кто уже пробовал, но не получил результата', 'Для тех, кто хочет системно прокачать навык с наставником'],
+      get: ['Видеоуроки и конспекты в личном кабинете', 'Домашние задания с проверкой куратора', 'Чат с участниками потока и эфиры с экспертом', 'Сертификат о прохождении курса'],
+    },
+
+    // 5. Стоимость
+    pricing: {
+      title: 'Стоимость обучения',
+      text: 'Выберите формат участия. Оплатить можно сразу или частями.',
+      plans: [
+        { name: 'Самостоятельный', price: '00 000 ₽', items: ['Все видеоуроки курса', 'Конспекты и материалы', 'Доступ на 3 месяца'] },
+        { name: 'С куратором', price: '00 000 ₽', items: ['Всё из тарифа «Самостоятельный»', 'Проверка домашних заданий', 'Чат с куратором', 'Доступ на 6 месяцев'], best: true },
+        { name: 'VIP', price: '00 000 ₽', items: ['Всё из тарифа «С куратором»', 'Личные созвоны с экспертом', 'Бессрочный доступ'] },
+      ],
+    },
+
+    faq: [
+      ['Как проходит обучение?', 'Уроки открываются в личном кабинете на этом сайте. Смотреть их можно в любое время с телефона или компьютера.'],
+      ['Что если курс мне не подойдёт?', 'Опишите здесь условия возврата. Например: если в течение 7 дней курс не подошёл, вернём деньги.'],
+      ['Как получить доступ после оплаты?', 'После оплаты мы пришлём логин и пароль на почту или в мессенджер. Войдите по кнопке «Войти» в правом верхнем углу.'],
+      ['Можно ли оплатить частями?', 'Опишите здесь доступные способы оплаты и рассрочки.'],
+    ],
+  };
+</script>
+<style>
+:root{
+  --bg:#f4f7fd;--bg2:#e9effb;--card:#ffffff;--ink:#0b1b3a;--muted:#5a6b8c;--line:#dbe3f3;
+  --acc:#1d4ed8;--acc-ink:#ffffff;--acc2:#e3ebff;--acc-soft:#2f62e8;
+  --ok:#1f8a4c;--ok-bg:#e6f6ec;--err:#c62a2a;--err-bg:#fdecec;--hw:#fff8e1;--hw-line:#f1dc9b;
+  --hero1:#0b1b3a;--hero2:#1d3f8f;--foot:#0a1630;--foot-ink:#c9d5ee;--foot-muted:#8296bd;
+  --shadow:0 10px 30px rgba(15,40,100,.08);--r:16px;
+}
+:root[data-theme="dark"]{
+  --bg:#081226;--bg2:#0c1a35;--card:#0f2042;--ink:#e8eefc;--muted:#97a9cc;--line:#1d3361;
+  --acc:#4c86ff;--acc-ink:#ffffff;--acc2:#142b58;--acc-soft:#6a9bff;
+  --ok:#5fd394;--ok-bg:#0f3326;--err:#ff7b7b;--err-bg:#3a1520;--hw:#2a2615;--hw-line:#4a4220;
+  --hero1:#050d1f;--hero2:#123172;--foot:#050c1c;--foot-ink:#c9d5ee;--foot-muted:#7d90b8;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:16px/1.6 -apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--ink);transition:background .2s,color .2s}
+a{color:var(--acc)}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px}
+/* шапка */
+.top{background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.top-in{display:flex;align-items:center;justify-content:space-between;min-height:68px;gap:16px}
+.brand{text-decoration:none;color:var(--ink);display:flex;flex-direction:column;line-height:1}
+.brand b{font-size:22px;letter-spacing:.12em;font-weight:800}
+.brand small{font-size:11px;color:var(--muted);letter-spacing:.06em;margin-top:4px}
+.menu{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.menu a.nl,.menu button.nl{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:9px;background:none;border:0;font:inherit;cursor:pointer}
+.menu a.nl:hover,.menu a.nl.on,.menu button.nl:hover{color:var(--ink);background:var(--acc2)}
+.theme{width:36px;height:36px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink);display:inline-grid;place-items:center;cursor:pointer;flex:none;margin-left:4px}
+.theme:hover{border-color:var(--acc)}
+.theme svg{width:18px;height:18px}
+.burger{display:none}
+.subnav{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 22px;padding:6px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.subnav a{padding:7px 12px;border-radius:8px;text-decoration:none;color:var(--muted)}
+.subnav a.on{background:var(--acc);color:var(--acc-ink)}
+main{min-height:65vh}
+.page{padding:32px 20px 70px}
+h1{font-size:32px;line-height:1.2;margin:0 0 14px}h2{font-size:24px;margin:28px 0 12px}h3{margin:0 0 10px;font-size:18px}
+.muted{color:var(--muted)}.small{font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;margin-bottom:18px;box-shadow:var(--shadow)}
+.card h2:first-child{margin-top:0}
+.narrow{max-width:440px;margin:40px auto}.center{text-align:center;max-width:640px;margin:40px auto}
+.empty{text-align:center;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--acc);color:var(--acc-ink);border:0;border-radius:11px;padding:12px 20px;font:inherit;font-weight:600;text-decoration:none;cursor:pointer;transition:filter .15s,transform .15s}
+.btn:hover{filter:brightness(1.1)}.btn:active{transform:translateY(1px)}.btn:disabled{opacity:.6;cursor:default}
+.btn.ghost{background:var(--acc2);color:var(--acc)}.btn.small{padding:7px 14px;font-size:14px;border-radius:9px}
+.btn.light{background:#fff;color:#0b1b3a}.btn.outline{background:transparent;border:1px solid rgba(255,255,255,.4);color:#fff}
+.link{background:none;border:0;padding:0;font:inherit;color:var(--muted);cursor:pointer}.red{color:var(--err)!important}
+label{display:block;margin:0 0 14px;font-size:14px;color:var(--muted)}
+input,textarea,select{display:block;width:100%;margin-top:6px;padding:11px 13px;border:1px solid var(--line);border-radius:10px;font:inherit;color:var(--ink);background:var(--bg)}
+textarea{resize:vertical}
+input:focus,textarea:focus,select:focus{outline:3px solid var(--acc2);border-color:var(--acc)}
+label.check{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:15px}
+label.check input{width:auto;margin:0}
+.cols{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}.cols .grow{flex:1;min-width:180px}
+td .cols{flex-wrap:nowrap}td .cols input{min-width:120px}td .cols select{width:auto}
+.access{border-top:1px solid var(--line);padding-top:10px}
+.flash{padding:12px 16px;border-radius:10px;margin-bottom:18px;background:var(--ok-bg);color:var(--ok)}.flash.err{background:var(--err-bg);color:var(--err)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;margin-bottom:24px}
+.course h2{margin-top:0}.course h2 a{color:var(--ink);text-decoration:none}
+.meta{color:var(--muted);font-size:14px}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:14px 0}
+.hp{position:absolute;left:-9999px}
+.crumbs{color:var(--muted);font-size:14px}.crumbs a{color:var(--muted)}
+.lessons{padding-left:22px;margin:0}.lessons li{padding:9px 0;border-bottom:1px solid var(--line)}
+.lessons li.locked{color:var(--muted)}.lessons.compact li{padding:6px 0;font-size:14px}.lessons li.cur a{font-weight:700;color:var(--ink)}
+.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:20px;background:var(--acc2);color:var(--muted);margin-left:6px;vertical-align:middle}
+.tag.free{background:var(--ok-bg);color:var(--ok)}.tag.done{color:var(--acc)}
+.lesson-layout{display:grid;grid-template-columns:1fr 300px;gap:24px;align-items:start}
+.side{position:sticky;top:88px}
+.video{position:relative;padding-top:56.25%;background:#000;border-radius:var(--r);overflow:hidden;margin-bottom:20px}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.content{font-size:17px}.content img{max-width:100%}
+.hw{background:var(--hw);border-color:var(--hw-line)}
+.pager{display:flex;justify-content:space-between;gap:10px;margin:26px 0}
+.progress{height:8px;background:var(--acc2);border-radius:8px;overflow:hidden}.progress div{height:100%;background:var(--acc)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{text-decoration:none;color:var(--ink);text-align:center}.stat b{display:block;font-size:34px}.stat span{color:var(--muted)}.stat.hot b{color:var(--err)}
+.row-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.row-head h1,.row-head h2{margin:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:14px}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:13px;color:var(--muted);font-weight:600;background:var(--bg2)}
+tr.off td{opacity:.5}tr.st-new td:first-child{box-shadow:inset 3px 0 var(--acc)}
+.search{display:flex;gap:8px;max-width:480px}.search input{margin:0}
+.loading{color:var(--muted);text-align:center;padding:80px 0}
+/* лендинг */
+.hero{background:radial-gradient(1200px 500px at 80% -10%,var(--hero2),transparent 60%),linear-gradient(160deg,var(--hero1),var(--hero2));color:#fff;padding:90px 0 80px;position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;right:-120px;bottom:-160px;width:460px;height:460px;border-radius:50%;background:rgba(255,255,255,.06)}
+.eyebrow{display:inline-block;font-size:13px;letter-spacing:.06em;padding:6px 12px;border-radius:30px;background:rgba(255,255,255,.12);margin-bottom:18px}
+.hero h1{font-size:54px;line-height:1.08;margin:0 0 18px;max-width:780px}
+.hero p{font-size:19px;max-width:640px;color:rgba(255,255,255,.82);margin:0 0 30px}
+.hero-stats{display:flex;gap:36px;flex-wrap:wrap;margin-top:46px}
+.hero-stats b{display:block;font-size:28px}.hero-stats span{color:rgba(255,255,255,.7);font-size:14px}
+.sec{padding:80px 0}.sec.alt{background:var(--bg2)}
+.sec-head{max-width:680px;margin-bottom:36px}.sec-head h2{font-size:34px;margin:0 0 10px}.sec-head p{color:var(--muted);font-size:18px;margin:0}
+.kicker{color:var(--acc);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
+.expert{display:grid;grid-template-columns:320px 1fr;gap:44px;align-items:center}
+.avatar{aspect-ratio:1;border-radius:28px;background:linear-gradient(135deg,var(--acc),var(--hero2));display:grid;place-items:center;color:#fff;font-size:72px;font-weight:800;box-shadow:var(--shadow)}
+.facts{display:flex;gap:28px;flex-wrap:wrap;margin-top:22px}.facts b{display:block;font-size:26px;color:var(--acc)}.facts span{color:var(--muted);font-size:14px}
+.modules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.module{position:relative}.module .num{color:var(--acc);font-weight:700;font-size:14px;margin-bottom:6px}
+.checks{list-style:none;padding:0;margin:0}.checks li{padding:8px 0 8px 32px;position:relative}
+.checks li:before{content:"";position:absolute;left:0;top:11px;width:20px;height:20px;border-radius:50%;background:var(--acc2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 10.5l2.5 2.5L14 7.5' fill='none' stroke='%232f62e8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;align-items:stretch}
+.plan{display:flex;flex-direction:column}.buy .plans{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}.buy .plan .price{font-size:24px}.plan .price{font-size:32px;font-weight:800;margin:6px 0 14px}.plan .checks{flex:1;margin-bottom:18px}
+.plan.best{border:2px solid var(--acc);position:relative}.plan.best:before{content:"Популярный";position:absolute;top:-12px;left:24px;background:var(--acc);color:#fff;font-size:12px;padding:3px 10px;border-radius:20px}
+.cta{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;border-radius:24px;padding:44px;display:grid;grid-template-columns:1fr 420px;gap:34px;align-items:center}
+.cta h2{font-size:30px;margin:0 0 10px}.cta p{color:rgba(255,255,255,.8)}
+.cta .card{margin:0;color:var(--ink)}
+details{border-bottom:1px solid var(--line);padding:16px 0}details summary{cursor:pointer;font-weight:600;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+details summary:after{content:"+";color:var(--acc);font-size:22px;line-height:1}details[open] summary:after{content:"−"}
+details p{color:var(--muted);margin:10px 0 0}
+.doc h2{font-size:20px}.doc p,.doc li{color:var(--muted)}
+.buy{display:grid;grid-template-columns:1fr 420px;gap:24px;align-items:start}
+.curator{display:flex;gap:18px;align-items:flex-start}.curator .ava{width:56px;height:56px;border-radius:50%;background:var(--acc2);display:grid;place-items:center;font-size:26px;flex:none}
+/* подвал */
+.foot{background:var(--foot);color:var(--foot-ink);padding:56px 0 28px;margin-top:0}
+.foot a{color:var(--foot-ink);text-decoration:none}.foot a:hover{color:#fff}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:30px}
+.foot h4{margin:0 0 14px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--foot-muted)}
+.foot ul{list-style:none;padding:0;margin:0}.foot li{margin:0 0 9px}
+.foot .brand{color:#fff}.foot .brand small{color:var(--foot-muted)}
+.foot-desc{color:var(--foot-muted);font-size:14px;margin-top:14px;max-width:300px}
+.foot-bottom{border-top:1px solid rgba(255,255,255,.1);margin-top:40px;padding-top:22px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:flex-end}
+.legal{font-size:14px;color:var(--foot-muted);line-height:1.7}.legal b{color:var(--foot-ink);font-weight:600}
+.foot-btns{display:flex;gap:8px;flex-wrap:wrap}
+.foot-btns a{border:1px solid rgba(255,255,255,.18);padding:7px 14px;border-radius:30px;font-size:13px}
+.foot-btns a:hover{border-color:rgba(255,255,255,.5)}
+@media(max-width:900px){
+  .expert,.cta,.buy,.lesson-layout,.two{grid-template-columns:1fr}.avatar{max-width:220px}
+  .foot-grid{grid-template-columns:1fr 1fr}.side{position:static}.stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:640px){
+  .wrap{padding:0 16px}.page{padding:24px 16px 56px}
+  .hero{padding:60px 0 56px}.hero h1{font-size:36px}.hero p{font-size:17px}.sec{padding:56px 0}.sec-head h2{font-size:27px}
+  .cta{padding:26px}.foot-grid{grid-template-columns:1fr}
+  .burger{display:inline-grid}.menu .nl{display:none}.menu.open .nl{display:block}
+  .menu.open{position:absolute;top:68px;left:0;right:0;background:var(--card);border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;padding:10px 16px}
+  table{display:block;overflow-x:auto}
+}
+</style>
+<script>
+  // тема применяется до отрисовки, чтобы не было вспышки
+  (function () {
+    var t = null; try { t = localStorage.getItem('theme'); } catch (e) {}
+    if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', t);
+  })();
+</script>
+</head>
+<body>
+<header class="top"><div class="wrap top-in">
+  <a class="brand" id="brand" href="/main"><b>НАЗВАНИЕ</b><small>вашего проекта</small></a>
+  <div class="menu" id="menu"></div>
+</div></header>
+<main id="app"><div class="loading">Загрузка…</div></main>
+<footer class="foot" id="foot"></footer>
+
+<script>
+'use strict';
+const SITE = window.SITE;
+
+// ---------- адреса страниц ----------
+// На GitHub Pages сайт живёт в подпапке репозитория (/demo_platform), на Amvera — в корне домена.
+const BASE = location.hostname.endsWith('github.io') ? '/' + (location.pathname.split('/')[1] || '') : '';
+const L = (p) => BASE + p;
+function currentPath() { let p = location.pathname; if (BASE && p.startsWith(BASE)) p = p.slice(BASE.length); return p.replace(/\/+$/, '') || '/'; }
+function go(path, replace) { history[replace ? 'replaceState' : 'pushState'](null, '', L(path)); render(); }
+
+// ---------- соединение с API (только HTTPS) ----------
+const pageIsLocal = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+const API = pageIsLocal ? '' : String(window.API_URL || '').replace(/\/$/, '');
+const SECURE = API === '' ? (pageIsLocal || location.protocol === 'https:') : API.startsWith('https://');
+
+let token = ''; try { token = localStorage.getItem('token') || ''; } catch (e) {}
+let state = { settings: {}, courses: [], user: null };
+let adminData = null, flashMsg = null;
+
+async function api(method, path, body) {
+  if (!SECURE) throw new Error('Адрес API должен начинаться с https://');
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers.Authorization = 'Bearer ' + token;
+  let res;
+  try { res = await fetch(API + path, { method, headers, body: body ? JSON.stringify(body) : undefined, credentials: 'omit', cache: 'no-store' }); }
+  catch (e) { throw new Error('Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.'); }
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401 && token && path !== '/api/login') setToken('');
+  if (!res.ok) throw Object.assign(new Error(data.error || 'Ошибка ' + res.status), { status: res.status });
+  return data;
+}
+function setToken(t) { token = t; try { t ? localStorage.setItem('token', t) : localStorage.removeItem('token'); } catch (e) {} }
+
+// ---------- помощники ----------
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const fmtDate = (iso) => iso ? iso.slice(0, 16).replace('T', ' ') : '';
+const ruDate = (d) => d ? d.split('-').reverse().join('.') : '';
+const plural = (n, a, b, c) => n % 10 === 1 && n % 100 !== 11 ? a : ([2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? b : c);
+const role = () => state.user ? state.user.role : '';
+const isStaff = () => role() === 'admin' || role() === 'curator';
+const hasCourse = () => state.courses.some((c) => c.access);
+const homeFor = () => !state.user ? '/main' : isStaff() ? '/admin' : hasCourse() ? '/learn' : '/buying';
+function flash(msg, type = 'ok') { flashMsg = { msg, type }; }
+function formData(form) {
+  const o = {};
+  for (const el of form.elements) {
+    if (!el.name) continue;
+    if (el.type === 'checkbox') { if (el.name.endsWith('[]')) { (o[el.name] ||= []); if (el.checked) o[el.name].push(el.value); } else o[el.name] = el.checked; }
+    else o[el.name] = el.value;
+  }
+  return o;
+}
+function embedUrl(raw) {
+  let u; try { u = new URL(String(raw || '').trim()); } catch { return ''; }
+  const h = u.hostname.replace(/^(www|m)\./, ''); let m;
+  if (h === 'youtu.be') return 'https://www.youtube.com/embed/' + u.pathname.slice(1);
+  if (h === 'youtube.com') {
+    if (u.searchParams.get('v')) return 'https://www.youtube.com/embed/' + u.searchParams.get('v');
+    if ((m = u.pathname.match(/^\/(?:shorts|live|embed)\/([\w-]+)/))) return 'https://www.youtube.com/embed/' + m[1];
+  }
+  if (h === 'rutube.ru' && !u.pathname.startsWith('/play/embed') && (m = u.pathname.match(/\/video\/(?:private\/)?(\w+)/)))
+    return 'https://rutube.ru/play/embed/' + m[1] + (u.searchParams.get('p') ? '/?p=' + u.searchParams.get('p') : '');
+  if ((h === 'vk.com' || h === 'vkvideo.ru') && (m = (u.pathname + (u.searchParams.get('z') || '')).match(/video(-?\d+)_(\d+)/)))
+    return 'https://vk.com/video_ext.php?oid=' + m[1] + '&id=' + m[2] + '&hd=2';
+  if (h === 'kinescope.io' && !u.pathname.startsWith('/embed/')) return 'https://kinescope.io/embed' + u.pathname;
+  return u.protocol === 'https:' ? u.toString() : '';
+}
+
+// ---------- тема ----------
+const ICON_SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const ICON_MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+function toggleTheme() {
+  const t = isDark() ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  try { localStorage.setItem('theme', t); } catch (e) {}
+  renderHeader();
+}
+
+// ---------- шапка и подвал ----------
+function renderHeader() {
+  const p = currentPath(), on = (pre) => (p === pre || p.startsWith(pre + '/')) ? 'on' : '';
+  const brand = $('#brand');
+  brand.href = L('/main');
+  brand.innerHTML = `<b>${esc(SITE.brand)}</b><small>${esc(SITE.brandSub)}</small>`;
+  let links = '';
+  if (!state.user) {
+    if (p === '/main' || p === '/') links = `<button class="nl" data-scroll="about">О проекте</button><button class="nl" data-scroll="expert">Эксперт</button><button class="nl" data-scroll="program">Программа</button><button class="nl" data-scroll="pricing">Стоимость</button>`;
+    links += `<a class="btn small" href="${L('/auth')}">Войти</a>`;
+  } else {
+    if (isStaff()) links = `<a class="nl ${on('/learn')}" href="${L('/learn')}">Курс</a><a class="nl ${on('/admin')}" href="${L('/admin')}">Админ-панель</a>`;
+    else if (hasCourse()) links = `<a class="nl ${on('/learn')}" href="${L('/learn')}">Обучение</a><a class="nl" href="${L('/learn')}#curator">Куратор</a>`;
+    else links = `<a class="nl ${on('/buying')}" href="${L('/buying')}">Купить курс</a>`;
+    links += `<a class="nl ${on('/account')}" href="${L('/account')}">Пароль</a><button class="nl" id="logout">Выйти</button>`;
+  }
+  const menu = $('#menu');
+  menu.classList.remove('open');
+  menu.innerHTML = links + `<button class="theme" id="theme" title="${isDark() ? 'Светлая тема' : 'Тёмная тема'}" aria-label="Переключить тему">${isDark() ? ICON_SUN : ICON_MOON}</button>` +
+    (state.user || p === '/main' || p === '/' ? `<button class="theme burger" id="burger" aria-label="Меню">☰</button>` : '');
+  $('#theme').onclick = toggleTheme;
+  const b = $('#burger'); if (b) b.onclick = () => menu.classList.toggle('open');
+  menu.querySelectorAll('[data-scroll]').forEach((el) => el.onclick = () => { menu.classList.remove('open'); const t = document.getElementById(el.dataset.scroll); if (t) t.scrollIntoView(); });
+  const lo = $('#logout'); if (lo) lo.onclick = async () => { try { await api('POST', '/api/logout'); } catch {} setToken(''); adminData = null; await loadPublic().catch(() => {}); go('/main'); };
+}
+
+function renderFooter() {
+  $('#foot').innerHTML = `<div class="wrap">
+    <div class="foot-grid">
+      <div><a class="brand" href="${L('/main')}"><b>${esc(SITE.brand)}</b><small>${esc(SITE.brandSub)}</small></a>
+        <p class="foot-desc">${esc(SITE.hero.title)}. Онлайн-обучение с экспертом и поддержкой куратора.</p></div>
+      <div><h4>Курс</h4><ul><li><a href="${L('/main')}">Главная</a></li><li><a href="${L('/buying')}">Купить курс</a></li><li><a href="${L('/auth')}">Личный кабинет</a></li></ul></div>
+      <div><h4>Помощь</h4><ul><li><a href="${L('/faq')}">FAQ</a></li><li><a href="${L('/support')}">Поддержка</a></li><li><a href="mailto:${esc(SITE.email)}" data-ext>${esc(SITE.email)}</a></li></ul></div>
+      <div><h4>Документы</h4><ul><li><a href="${L('/privacy')}">Политика конфиденциальности</a></li><li><a href="${L('/terms')}">Пользовательское соглашение</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <div class="legal"><b>${esc(SITE.company)}</b><br>ИНН ${esc(SITE.inn)}<br><a href="mailto:${esc(SITE.email)}" data-ext>${esc(SITE.email)}</a><br>© ${new Date().getFullYear()} Все права защищены</div>
+      <div class="foot-btns"><a href="${L('/faq')}">FAQ</a><a href="${L('/support')}">Поддержка</a><a href="${L('/privacy')}">Политика конфиденциальности</a><a href="${L('/terms')}">Пользовательское соглашение</a></div>
+    </div></div>`;
+}
+
+function page(html, opts = {}) {
+  const f = flashMsg ? `<div class="flash ${flashMsg.type}">${esc(flashMsg.msg)}</div>` : '';
+  flashMsg = null;
+  $('#app').innerHTML = opts.full ? html : `<div class="wrap page">${f}${html}</div>`;
+  if (!opts.keepScroll) window.scrollTo(0, 0);
+}
+function bindForm(sel, handler) {
+  const form = $(sel); if (!form) return;
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button[type=submit],button:not([type])'); if (btn) btn.disabled = true;
+    const old = form.querySelector('.flash.err'); if (old) old.remove();
+    try { await handler(formData(form), form); }
+    catch (err) { form.insertAdjacentHTML('afterbegin', `<div class="flash err">${esc(err.message)}</div>`); }
+    finally { if (btn) btn.disabled = false; }
+  };
+}
+function confirmClick(sel, text, fn) {
+  document.querySelectorAll(sel).forEach((el) => el.onclick = async (e) => { e.preventDefault(); if (!confirm(text)) return; try { await fn(el.dataset.id, el); } catch (err) { alert(err.message); } });
+}
+
+// ---------- форма заявки / покупки ----------
+function leadForm(opts = {}) {
+  const courses = opts.courses || state.courses.filter((c) => !c.access);
+  let sel = '';
+  if (opts.courseId) sel = `<input type="hidden" name="courseId" value="${esc(opts.courseId)}">`;
+  else if (courses.length > 1) sel = `<label>Курс<select name="courseId">${courses.map((c) => `<option value="${esc(c.id)}">${esc(c.title)}</option>`).join('')}</select></label>`;
+  else if (courses.length === 1) sel = `<input type="hidden" name="courseId" value="${esc(courses[0].id)}">`;
+  const u = state.user || {};
+  const plans = SITE.pricing.plans.map((p) => `<option>${esc(p.name)} — ${esc(p.price)}</option>`).join('');
+  return `<form class="card leadform" id="${opts.id || 'leadform'}"><h3>${esc(opts.title || 'Хочу на курс')}</h3>
+    <p class="muted small">${esc(opts.text || 'Оставьте контакт: пришлём условия оплаты и ответим на вопросы.')}</p>${sel}
+    ${opts.plans ? `<label>Тариф<select name="plan">${plans}</select></label>` : ''}
+    <label>Имя<input name="name" required maxlength="200" value="${esc(u.name)}"></label>
+    <label>Telegram, телефон или email<input name="contact" required maxlength="200" placeholder="@username" value="${esc(u.email)}"></label>
+    <label>Комментарий (необязательно)<textarea name="message" rows="2" maxlength="2000"></textarea></label>
+    <input name="website" class="hp" tabindex="-1" autocomplete="off"><button class="btn" style="width:100%">${esc(opts.button || 'Оставить заявку')}</button>
+    <p class="muted small" style="margin-bottom:0">Нажимая кнопку, вы соглашаетесь с <a href="${L('/privacy')}">политикой конфиденциальности</a>.</p></form>`;
+}
+function bindLeads() {
+  document.querySelectorAll('.leadform').forEach((form) => {
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const d = formData(form), btn = form.querySelector('button'); btn.disabled = true;
+      const old = form.querySelector('.flash.err'); if (old) old.remove();
+      try {
+        await api('POST', '/api/leads', { name: d.name, contact: d.contact, courseId: d.courseId || '', message: [d.plan ? 'Тариф: ' + d.plan : '', d.message].filter(Boolean).join('\n'), website: d.website });
+        form.innerHTML = `<h3>Заявка отправлена</h3><p>Спасибо! Мы свяжемся с вами в ближайшее время и пришлём условия оплаты. После оплаты доступ к урокам откроется в личном кабинете.</p>`;
+      } catch (err) { form.insertAdjacentHTML('afterbegin', `<div class="flash err">${esc(err.message)}</div>`); btn.disabled = false; }
+    };
+  });
+}
+
+// ---------- /main: рекламная страница ----------
+function viewMain() {
+  const S = SITE, free = (() => { for (const c of state.courses) { const l = c.lessons.find((x) => x.isFree); if (l) return l; } return null; })();
+  page(`
+  <section class="hero" id="about"><div class="wrap" style="position:relative;z-index:1">
+    <span class="eyebrow">${esc(S.hero.eyebrow)}</span>
+    <h1>${esc(S.hero.title)}</h1><p>${esc(S.hero.text)}</p>
+    <div class="actions">${free ? `<a class="btn light" href="${L('/lesson/' + free.id)}">▶ Смотреть вводный урок</a>` : ''}<a class="btn outline" href="${L('/buying')}">Купить курс</a></div>
+    <div class="hero-stats">${S.hero.stats.map(([b, s]) => `<div><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join('')}</div>
+  </div></section>
+
+  <section class="sec" id="expert"><div class="wrap expert">
+    <div class="avatar">${esc(S.expert.initials)}</div>
+    <div><div class="kicker">${esc(S.expert.title)}</div><h2 style="font-size:34px;margin:0 0 6px">${esc(S.expert.name)}</h2>
+      <p class="muted" style="margin-top:0">${esc(S.expert.role)}</p>${S.expert.text.map((t) => `<p>${esc(t)}</p>`).join('')}
+      <div class="facts">${S.expert.facts.map(([b, s]) => `<div><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join('')}</div></div>
+  </div></section>
+
+  <section class="sec alt" id="program"><div class="wrap">
+    <div class="sec-head"><div class="kicker">Программа</div><h2>${esc(S.program.title)}</h2><p>${esc(S.program.text)}</p></div>
+    <div class="modules">${S.program.modules.map(([n, t, d]) => `<div class="card module"><div class="num">${esc(n)}</div><h3>${esc(t)}</h3><p class="muted" style="margin:0">${esc(d)}</p></div>`).join('')}</div>
+    ${free ? `<div class="actions" style="margin-top:20px"><a class="btn ghost" href="${L('/lesson/' + free.id)}">Посмотреть первый урок бесплатно</a></div>` : ''}
+  </div></section>
+
+  <section class="sec" id="benefits"><div class="wrap">
+    <div class="sec-head"><div class="kicker">Кому подойдёт</div><h2>${esc(S.benefits.title)}</h2></div>
+    <div class="two"><div class="card"><h3>Курс для вас, если…</h3><ul class="checks">${S.benefits.who.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>
+      <div class="card"><h3>Что вы получите</h3><ul class="checks">${S.benefits.get.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div></div>
+  </div></section>
+
+  <section class="sec alt" id="pricing"><div class="wrap">
+    <div class="sec-head"><div class="kicker">Тарифы</div><h2>${esc(S.pricing.title)}</h2><p>${esc(S.pricing.text)}</p></div>
+    <div class="plans">${S.pricing.plans.map((p) => `<div class="card plan ${p.best ? 'best' : ''}"><h3>${esc(p.name)}</h3><div class="price">${esc(p.price)}</div>
+      <ul class="checks">${p.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul><a class="btn ${p.best ? '' : 'ghost'}" href="${L('/buying')}">Выбрать тариф</a></div>`).join('')}</div>
+  </div></section>
+
+  <section class="sec" id="faq"><div class="wrap"><div class="two">
+    <div><div class="kicker">FAQ</div><h2 style="font-size:34px;margin-top:0">Частые вопросы</h2>${S.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div>
+    <div class="cta" style="grid-template-columns:1fr"><div><h2>Остались вопросы?</h2><p>Оставьте контакт, и мы расскажем подробнее о курсе.</p></div>${leadForm({ title: 'Получить консультацию', button: 'Отправить' })}</div>
+  </div></div></section>`, { full: true });
+  bindLeads();
+}
+
+// ---------- /buying: меню покупки ----------
+function viewBuying() {
+  if (state.user && (hasCourse() || isStaff())) return go(isStaff() ? '/admin' : '/learn', true);
+  const cs = state.courses;
+  page(`<div class="row-head" style="margin-bottom:8px"><h1>Покупка курса</h1></div>
+    <p class="muted" style="max-width:680px">${state.user ? 'У вашего аккаунта пока нет оплаченных курсов. Выберите курс и тариф, оставьте заявку, и мы пришлём реквизиты для оплаты. После оплаты уроки откроются здесь же, в разделе «Обучение».' : 'Выберите курс и тариф, оставьте заявку, и мы пришлём реквизиты для оплаты. После оплаты вы получите логин и пароль от личного кабинета.'}</p>
+    <div class="buy"><div>
+      ${cs.length ? cs.map((c) => { const free = c.lessons.find((l) => l.isFree), n = c.lessons.length; return `<article class="card course"><h2><a href="${L('/course/' + c.slug)}">${esc(c.title)}</a></h2>
+        ${c.author ? `<p class="muted" style="margin-top:-6px">Автор: ${esc(c.author)}</p>` : ''}<div class="desc">${c.description || ''}</div>
+        <p class="meta">${n} ${plural(n, 'урок', 'урока', 'уроков')}${c.price ? ` · <b>${esc(c.price)}</b>` : ''}</p>
+        <div class="actions">${free ? `<a class="btn ghost small" href="${L('/lesson/' + free.id)}">▶ Бесплатный урок</a>` : ''}<a class="btn ghost small" href="${L('/course/' + c.slug)}">Программа</a></div></article>`; }).join('')
+        : `<div class="card empty">Курсы скоро появятся.</div>`}
+      <div class="plans" style="margin-top:8px">${SITE.pricing.plans.map((p) => `<div class="card plan ${p.best ? 'best' : ''}"><h3>${esc(p.name)}</h3><div class="price">${esc(p.price)}</div><ul class="checks">${p.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</div>
+    </div>
+    <div>${leadForm({ title: 'Оформить покупку', text: 'Оплата пока принимается по реквизитам: после заявки мы свяжемся с вами в течение дня.', plans: true, courses: cs, button: 'Купить курс' })}
+      ${state.user ? '' : `<p class="muted small center" style="margin:0">Уже оплатили? <a href="${L('/auth')}">Войдите в кабинет</a></p>`}</div></div>`);
+  bindLeads();
+}
+
+// ---------- курс и уроки ----------
+function lessonList(c, curId, compact) {
+  return `<ol class="lessons ${compact ? 'compact' : ''}">` + c.lessons.map((l) => {
+    const open = c.access || l.isFree;
+    const tag = l.isFree && !c.access ? '<span class="tag free">бесплатно</span>' : !open ? (compact ? ' 🔒' : '<span class="tag">🔒</span>') : l.viewed && !compact ? '<span class="tag done">✓ просмотрен</span>' : '';
+    return `<li class="${l.id === curId ? 'cur' : ''} ${open ? '' : 'locked'}">${open ? `<a href="${L('/lesson/' + l.id)}">${esc(l.title)}</a>` : `<span>${esc(l.title)}</span>`}${tag}</li>`;
+  }).join('') + `</ol>`;
+}
+function viewCourse(slug) {
+  const c = state.courses.find((x) => x.slug === slug);
+  if (!c) return viewMessage('Курс не найден');
+  page(`<p class="crumbs"><a href="${L('/main')}">Главная</a> / ${esc(c.title)}</p><div class="buy"><div><h1>${esc(c.title)}</h1>
+    ${c.author ? `<p class="muted">Автор: ${esc(c.author)}</p>` : ''}<div class="desc">${c.description || ''}</div>
+    ${c.price && !c.access ? `<p>Стоимость: <b>${esc(c.price)}</b></p>` : ''}<h2>Программа</h2><div class="card">${lessonList(c)}</div></div>
+    <div>${c.access ? `<div class="card"><h3>У вас есть доступ</h3><a class="btn" href="${L('/learn')}">Перейти к обучению</a></div>` : leadForm({ courseId: c.id, title: 'Купить курс', plans: true, button: 'Купить курс' })}</div></div>`);
+  bindLeads();
+}
+async function viewLesson(id) {
+  let d;
+  try { d = await api('GET', '/api/lessons/' + encodeURIComponent(id)); }
+  catch (e) { return viewMessage(e.status === 404 ? 'Урок не найден' : 'Ошибка', e.status === 404 ? '' : e.message); }
+  const c = d.course, l = d.lesson;
+  const crumbs = `<p class="crumbs"><a href="${L(state.user && c.access ? '/learn' : '/main')}">${state.user && c.access ? 'Обучение' : 'Главная'}</a> / <a href="${L('/course/' + c.slug)}">${esc(c.title)}</a> / ${esc(l.title)}</p>`;
+  if (d.locked) {
+    page(crumbs + `<div class="card center"><h1>🔒 ${esc(l.title)}</h1><p>Этот урок доступен ученикам курса «${esc(c.title)}».</p>
+      ${state.user ? `<p><a class="btn" href="${L('/buying')}">Купить курс</a></p>` : `<div class="actions" style="justify-content:center"><a class="btn" href="${L('/auth?next=' + encodeURIComponent('/lesson/' + l.id))}">Войти</a><a class="btn ghost" href="${L('/buying')}">Купить курс</a></div>`}</div>`);
+    return;
+  }
+  const i = c.lessons.findIndex((x) => x.id === l.id), prev = c.lessons[i - 1], next = c.lessons[i + 1];
+  const canOpen = (x) => x && (c.access || x.isFree);
+  const src = embedUrl(l.videoUrl);
+  page(crumbs + `<div class="lesson-layout"><article>
+    <h1>${esc(l.title)}${l.published ? '' : ' <span class="tag">черновик</span>'}</h1>
+    ${src ? `<div class="video"><iframe src="${esc(src)}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>` : ''}
+    <div class="content">${l.content || ''}</div>
+    ${l.homework ? `<div class="card hw"><h3>Домашнее задание</h3><div class="content">${l.homework}</div>${curatorLinkHtml('Отправить ДЗ куратору')}</div>` : ''}
+    <div class="pager">${canOpen(prev) ? `<a class="btn ghost" href="${L('/lesson/' + prev.id)}">← ${esc(prev.title)}</a>` : '<span></span>'}
+      ${canOpen(next) ? `<a class="btn" href="${L('/lesson/' + next.id)}">${esc(next.title)} →</a>` : ''}</div>
+    ${c.access ? '' : `<div class="cta"><div><h2>Понравился урок?</h2><p>Получите доступ ко всем урокам курса, домашним заданиям и обратной связи куратора.</p></div>${leadForm({ courseId: c.id, title: 'Купить курс', plans: true, button: 'Купить курс' })}</div>`}</article>
+    <aside class="card side"><h3>${esc(c.title)}</h3>${lessonList(c, l.id, true)}</aside></div>`);
+  bindLeads();
+}
+function viewMessage(title, text) { page(`<div class="card center"><h1>${esc(title)}</h1>${text ? `<p>${esc(text)}</p>` : ''}<p><a class="btn" href="${L(homeFor())}">На главную</a></p></div>`); }
+
+// ---------- /auth: вход ----------
+function viewAuth(next) {
+  if (state.user) return go(homeFor(), true);
+  page(`<form class="card narrow" id="login"><h1>Вход</h1><p class="muted" style="margin-top:-6px">Личный кабинет ученика</p>
+    <label>Email<input type="email" name="email" required autofocus autocomplete="username"></label>
+    <label>Пароль<input type="password" name="password" required autocomplete="current-password"></label>
+    <button class="btn" style="width:100%">Войти</button>
+    <p class="muted small">Логин и пароль приходят после оплаты курса. Ещё не купили? <a href="${L('/buying')}">Выбрать тариф</a>. Забыли пароль? <a href="${L('/support')}">Напишите в поддержку</a>.</p></form>`);
+  bindForm('#login', async (d) => {
+    const r = await api('POST', '/api/login', { email: d.email, password: d.password });
+    setToken(r.token); await loadPublic();
+    go(next && next.startsWith('/') && !next.startsWith('//') ? next : homeFor());
+  });
+}
+
+// ---------- /learn: обучение и связь с куратором ----------
+function curatorLinkHtml(label) {
+  const s = state.settings;
+  if (s.curatorLink && /^https:\/\//.test(s.curatorLink)) return `<a class="btn small" href="${esc(s.curatorLink)}" target="_blank" rel="noopener" data-ext>${esc(label || 'Написать куратору')}</a>`;
+  return `<a class="btn small" href="mailto:${esc(SITE.email)}" data-ext>${esc(label || 'Написать куратору')}</a>`;
+}
+async function viewLearn() {
+  if (!state.user) return go('/auth?next=' + encodeURIComponent('/learn'), true);
+  const d = await api('GET', '/api/me');
+  if (!d.courses.length && !isStaff()) return go('/buying', true);
+  const name = state.user.name ? ', ' + state.user.name : '';
+  page(`<h1>Обучение</h1><p class="muted" style="margin-top:-6px">Добро пожаловать${esc(name)}! Продолжайте с того места, где остановились.</p>
+    <div class="buy"><div>
+    ${d.courses.length ? d.courses.map((c) => {
+      const done = c.lessons.filter((l) => l.viewed).length, n = c.lessons.length;
+      const nextL = c.lessons.find((l) => !l.viewed) || c.lessons[0];
+      return `<article class="card course"><div class="row-head"><h2 style="margin:0"><a href="${L('/course/' + c.slug)}">${esc(c.title)}</a></h2>
+        ${nextL ? `<a class="btn small" href="${L('/lesson/' + nextL.id)}">${done ? 'Продолжить' : 'Начать'}</a>` : ''}</div>
+        <div class="progress" style="margin:16px 0 6px"><div style="width:${n ? Math.round(done / n * 100) : 0}%"></div></div>
+        <p class="meta" style="margin:0 0 14px">Пройдено ${done} из ${n}${c.until ? ' · доступ до ' + ruDate(c.until) : ''}</p>${lessonList(c)}</article>`;
+    }).join('') : `<div class="card empty">Курсов пока нет. Создайте курс в админ-панели.</div>`}
+    </div>
+    <div><div class="card" id="curator"><div class="curator"><div class="ava">💬</div><div><h3>Связь с куратором</h3>
+      <p class="muted small">${esc(state.settings.curatorText || 'Куратор отвечает на вопросы по урокам и проверяет домашние задания.')}</p>${curatorLinkHtml()}</div></div></div>
+      <div class="card"><h3>Поддержка</h3><p class="muted small">Технические вопросы, доступ, оплата:</p><a href="mailto:${esc(SITE.email)}" data-ext>${esc(SITE.email)}</a></div></div></div>`);
+  if (location.hash === '#curator') setTimeout(() => $('#curator').scrollIntoView(), 50);
+}
+
+function viewAccount() {
+  if (!state.user) return go('/auth', true);
+  page(`<form class="card narrow" id="pw"><h1>Смена пароля</h1>
+    <label>Текущий пароль<input type="password" name="current" required autocomplete="current-password"></label>
+    <label>Новый пароль (от 8 символов)<input type="password" name="password" minlength="8" required autocomplete="new-password"></label>
+    <button class="btn">Сохранить</button></form>`);
+  bindForm('#pw', async (d) => { await api('POST', '/api/me/password', d); flash('Пароль изменён.'); go(homeFor()); });
+}
+
+// ---------- страницы подвала (шаблоны) ----------
+function viewDoc(kind) {
+  const S = SITE;
+  const docs = {
+    faq: ['Частые вопросы', S.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')],
+    support: ['Поддержка', `<p>Если у вас вопрос по доступу, оплате или работе сайта, напишите нам, и мы ответим в течение рабочего дня.</p>
+      <p><b>Email:</b> <a href="mailto:${esc(S.email)}" data-ext>${esc(S.email)}</a></p>${state.settings.contactLink && /^https:\/\//.test(state.settings.contactLink) ? `<p><a class="btn" href="${esc(state.settings.contactLink)}" target="_blank" rel="noopener" data-ext>${esc(state.settings.contactText || 'Написать нам')}</a></p>` : ''}
+      <p class="muted small">Укажите в письме email, с которым вы входите в личный кабинет.</p>`],
+    privacy: ['Политика конфиденциальности', `<p class="muted small">Шаблон. Замените текст на итоговую редакцию, согласованную с юристом (152-ФЗ «О персональных данных»).</p>
+      <h2>1. Общие положения</h2><p>Настоящая политика определяет порядок обработки персональных данных пользователей сайта. Оператор: ${esc(S.company)}, ИНН ${esc(S.inn)}.</p>
+      <h2>2. Какие данные мы собираем</h2><p>Имя, контактные данные (email, телефон, мессенджер), данные об оплате и прохождении курса.</p>
+      <h2>3. Цели обработки</h2><p>Предоставление доступа к курсу, связь с пользователем, исполнение договора, улучшение качества услуг.</p>
+      <h2>4. Хранение и защита</h2><p>Данные передаются по защищённому соединению (HTTPS) и хранятся на серверах в РФ. Пароли хранятся в зашифрованном виде.</p>
+      <h2>5. Права пользователя</h2><p>Вы можете запросить изменение или удаление своих данных, написав на <a href="mailto:${esc(S.email)}" data-ext>${esc(S.email)}</a>.</p>`],
+    terms: ['Пользовательское соглашение', `<p class="muted small">Шаблон. Замените текст на итоговую редакцию оферты, согласованную с юристом.</p>
+      <h2>1. Предмет соглашения</h2><p>${esc(S.company)} (ИНН ${esc(S.inn)}) предоставляет пользователю доступ к материалам онлайн-курса на условиях настоящего соглашения.</p>
+      <h2>2. Доступ к материалам</h2><p>Доступ открывается после оплаты на срок, указанный в выбранном тарифе. Передавать логин и пароль третьим лицам запрещено.</p>
+      <h2>3. Оплата и возврат</h2><p>Опишите порядок оплаты и условия возврата денежных средств.</p>
+      <h2>4. Интеллектуальная собственность</h2><p>Материалы курса защищены авторским правом. Копирование и распространение без согласия правообладателя запрещено.</p>
+      <h2>5. Контакты</h2><p><a href="mailto:${esc(S.email)}" data-ext>${esc(S.email)}</a></p>`],
+  };
+  const [title, body] = docs[kind];
+  page(`<div class="card doc" style="max-width:820px;margin:0 auto"><h1>${title}</h1>${body}</div>`);
+}
+
+// ---------- админ-панель ----------
+const STATUSES = { new: 'Новая', contacted: 'Связались', paid: 'Оплатил', rejected: 'Отказ' };
+const ROLES = { student: 'Ученик', curator: 'Куратор', admin: 'Администратор' };
+async function loadAdmin() { adminData = await api('GET', '/api/admin/data'); return adminData; }
+const A = () => adminData;
+const isAdminRole = () => A() && A().role === 'admin';
+const courseTitle = (id) => (A().courses.find((c) => c.id === id) || {}).title || '';
+function adminNav() {
+  const p = currentPath(), on = (pre, exact) => (exact ? p === pre : p.startsWith(pre)) ? 'on' : '';
+  return `<nav class="subnav"><a class="${on('/admin', true)}" href="${L('/admin')}">Обзор</a><a class="${on('/admin/course') || on('/admin/lesson')}" href="${L('/admin/courses')}">Курсы и уроки</a>
+    <a class="${on('/admin/user')}" href="${L('/admin/users')}">Ученики</a><a class="${on('/admin/leads')}" href="${L('/admin/leads')}">Заявки</a>
+    ${isAdminRole() ? `<a class="${on('/admin/settings')}" href="${L('/admin/settings')}">Настройки</a>` : ''}<a href="${L('/main')}">Открыть сайт</a></nav>`;
+}
+const apage = (html) => page(adminNav() + html);
+
+function viewDashboard() {
+  const d = A(), newLeads = d.leads.filter((l) => l.status === 'new').length;
+  const leads = d.leads.slice().reverse().slice(0, 5);
+  apage(`<h1>Админ-панель</h1><div class="stats">
+    <a class="card stat" href="${L('/admin/courses')}"><b>${d.courses.length}</b><span>курсов</span></a>
+    <a class="card stat" href="${L('/admin/courses')}"><b>${d.lessons.length}</b><span>уроков</span></a>
+    <a class="card stat" href="${L('/admin/users')}"><b>${d.users.filter((u) => u.role === 'student').length}</b><span>учеников</span></a>
+    <a class="card stat ${newLeads ? 'hot' : ''}" href="${L('/admin/leads')}"><b>${newLeads}</b><span>новых заявок</span></a></div>
+    <div class="actions"><a class="btn" href="${L('/admin/user/new')}">+ Выдать доступ ученику</a><a class="btn ghost" href="${L('/admin/course/new')}">+ Новый курс</a></div>
+    <h2>Последние заявки</h2>${leads.length ? `<table><tr><th>Дата</th><th>Имя</th><th>Контакт</th><th>Сообщение</th><th></th></tr>${leads.map((l) => `<tr><td class="small">${fmtDate(l.createdAt)}</td><td>${esc(l.name)}</td><td>${esc(l.contact)}</td><td class="small">${esc(l.message)}</td><td><a href="${L('/admin/user/new?lead=' + l.id)}">выдать доступ</a></td></tr>`).join('')}</table>` : '<p class="muted">Заявок пока нет.</p>'}`);
+}
+function viewCourses() {
+  const d = A();
+  apage(`<div class="row-head"><h1>Курсы</h1><a class="btn" href="${L('/admin/course/new')}">+ Новый курс</a></div>
+    ${!d.courses.length ? '<div class="card empty" style="margin-top:14px">Курсов пока нет. Создайте первый.</div>' : `<table><tr><th>Курс</th><th>Уроков</th><th>Учеников</th><th>Статус</th><th></th></tr>
+    ${d.courses.map((c) => `<tr><td><a href="${L('/admin/course/' + c.id)}">${esc(c.title)}</a><div class="muted small">${esc(c.author)}</div></td>
+      <td>${d.lessons.filter((l) => l.courseId === c.id).length}</td><td>${d.users.filter((u) => u.role === 'student' && (u.access || []).some((a) => a.courseId === c.id)).length}</td>
+      <td>${c.published ? 'опубликован' : 'скрыт'}</td><td><a href="${L('/course/' + c.slug)}">на сайте</a></td></tr>`).join('')}</table>`}`);
+}
+function viewCourseForm(id) {
+  const isNew = id === 'new', c = isNew ? { published: true } : A().courses.find((x) => x.id === id);
+  if (!c) return go('/admin/courses', true);
+  const lessons = isNew ? [] : A().lessons.filter((l) => l.courseId === id);
+  apage(`<p class="crumbs"><a href="${L('/admin/courses')}">Курсы</a> / ${isNew ? 'Новый курс' : esc(c.title)}</p><div class="two">
+    <form class="card" id="cf"><h2>${isNew ? 'Новый курс' : 'Настройки курса'}</h2>
+      <label>Название<input name="title" value="${esc(c.title)}" required></label>
+      <label>Эксперт / автор<input name="author" value="${esc(c.author)}"></label>
+      <label>Адрес страницы (латиницей, можно оставить пустым)<input name="slug" value="${esc(c.slug)}"></label>
+      <label>Описание (можно HTML)<textarea name="description" rows="6">${esc(c.description)}</textarea></label>
+      <label>Цена (как показывать на сайте)<input name="price" value="${esc(c.price)}" placeholder="49 900 ₽"></label>
+      <label class="check"><input type="checkbox" name="published" ${c.published ? 'checked' : ''}> Показывать на сайте</label>
+      <button class="btn">Сохранить</button></form>
+    ${isNew ? '' : `<div><div class="card"><div class="row-head"><h2>Уроки</h2><a class="btn small" href="${L('/admin/lesson/new?course=' + c.id)}">+ Урок</a></div>
+      ${lessons.length ? '' : '<p class="muted">Уроков пока нет. Первый урок по умолчанию будет бесплатным вводным.</p>'}
+      <ol class="lessons">${lessons.map((l) => `<li><a href="${L('/admin/lesson/' + l.id)}">${l.order}. ${esc(l.title)}</a>${l.isFree ? '<span class="tag free">бесплатный</span>' : ''}${l.published ? '' : '<span class="tag">черновик</span>'} <a class="small" href="${L('/lesson/' + l.id)}">↗</a></li>`).join('')}</ol></div>
+      <button class="link red" id="delc" data-id="${esc(c.id)}">Удалить курс</button></div>`}</div>`);
+  bindForm('#cf', async (d) => {
+    const r = await api('POST', '/api/admin/courses', { id: isNew ? '' : c.id, ...d });
+    await loadAdmin(); await loadPublic(); flash(isNew ? 'Курс создан. Теперь добавьте уроки.' : 'Курс сохранён.'); go('/admin/course/' + r.id);
+  });
+  confirmClick('#delc', 'Удалить курс со всеми уроками? Это нельзя отменить.', async (cid) => { await api('DELETE', '/api/admin/courses/' + cid); await loadAdmin(); await loadPublic(); flash('Курс удалён.'); go('/admin/courses'); });
+}
+function viewLessonForm(id, q) {
+  const isNew = id === 'new';
+  let l = isNew ? null : A().lessons.find((x) => x.id === id);
+  const course = A().courses.find((c) => c.id === (isNew ? q.get('course') : l && l.courseId));
+  if (!course) return go('/admin/courses', true);
+  if (isNew) { const order = A().lessons.filter((x) => x.courseId === course.id).length + 1; l = { order, published: true, isFree: order === 1 }; }
+  apage(`<p class="crumbs"><a href="${L('/admin/courses')}">Курсы</a> / <a href="${L('/admin/course/' + course.id)}">${esc(course.title)}</a> / ${isNew ? 'Новый урок' : esc(l.title)}</p>
+    <form class="card" id="lf"><div class="cols"><label class="grow">Название урока<input name="title" value="${esc(l.title)}" required></label>
+      <label>Порядок<input type="number" name="order" value="${l.order}" min="1" style="width:6em"></label></div>
+      <label>Ссылка на видео (YouTube, Rutube, VK, Kinescope или ссылка для встраивания)<input name="videoUrl" value="${esc(l.videoUrl)}" placeholder="https://rutube.ru/video/..."></label>
+      <label>Текст урока (можно HTML: &lt;p&gt;, &lt;b&gt;, &lt;a&gt;, &lt;ul&gt;)<textarea name="content" rows="10">${esc(l.content)}</textarea></label>
+      <label>Домашнее задание (видно только ученикам с доступом)<textarea name="homework" rows="4">${esc(l.homework)}</textarea></label>
+      <label class="check"><input type="checkbox" name="isFree" ${l.isFree ? 'checked' : ''}> Бесплатный (вводный) урок: открыт всем без входа</label>
+      <label class="check"><input type="checkbox" name="published" ${l.published ? 'checked' : ''}> Опубликован</label>
+      <div class="actions"><button class="btn">Сохранить</button>${isNew ? '' : `<a class="btn ghost" href="${L('/lesson/' + l.id)}">Посмотреть</a><button type="button" class="link red" id="dell" data-id="${esc(l.id)}">Удалить урок</button>`}</div></form>`);
+  bindForm('#lf', async (d) => {
+    await api('POST', '/api/admin/lessons', { id: isNew ? '' : l.id, courseId: course.id, ...d, order: parseInt(d.order, 10) || 1 });
+    await loadAdmin(); await loadPublic(); flash(isNew ? 'Урок добавлен.' : 'Урок сохранён.'); go('/admin/course/' + course.id);
+  });
+  confirmClick('#dell', 'Удалить урок?', async (lid) => { await api('DELETE', '/api/admin/lessons/' + lid); await loadAdmin(); await loadPublic(); flash('Урок удалён.'); go('/admin/course/' + course.id); });
+}
+function viewUsers(q) {
+  const s = (q.get('q') || '').toLowerCase();
+  const users = A().users.filter((u) => !s || u.email.includes(s) || (u.name || '').toLowerCase().includes(s)).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  apage(`<div class="row-head"><h1>Ученики и сотрудники</h1><a class="btn" href="${L('/admin/user/new')}">+ Выдать доступ</a></div>
+    <form class="search" id="us" style="margin-top:14px"><input name="q" value="${esc(s)}" placeholder="Поиск по email или имени"><button class="btn ghost small">Найти</button></form>
+    <table><tr><th>Email</th><th>Имя</th><th>Доступ</th><th>Оплата</th><th>Последний вход</th></tr>
+    ${users.map((u) => `<tr class="${u.disabled ? 'off' : ''}"><td><a href="${L('/admin/user/' + u.id)}">${esc(u.email)}</a>${u.role !== 'student' ? `<span class="tag">${ROLES[u.role] || u.role}</span>` : ''}${u.disabled ? '<span class="tag">отключён</span>' : ''}</td>
+      <td>${esc(u.name)}</td><td class="small">${esc((u.access || []).map((a) => courseTitle(a.courseId) + (a.until ? ' (до ' + ruDate(a.until) + ')' : '')).filter(Boolean).join(', ') || '—')}</td>
+      <td class="small">${esc(u.paid)}</td><td class="small">${u.lastLogin ? fmtDate(u.lastLogin) : 'не входил'}</td></tr>`).join('')}</table>`);
+  $('#us').onsubmit = (e) => { e.preventDefault(); go('/admin/users?q=' + encodeURIComponent($('#us [name=q]').value)); };
+}
+function credentialsView(u, password) {
+  const titles = (u.access || []).map((a) => '«' + courseTitle(a.courseId) + '»').join(', ');
+  const msg = `Здравствуйте${u.name ? ', ' + u.name : ''}! ${titles ? 'Доступ к курсу ' + titles + ' открыт.' : 'Ваш аккаунт создан.'}\n\nВход: ${location.origin + L('/auth')}\nЛогин: ${u.email}\nПароль: ${password}\n\nПароль можно сменить в личном кабинете.`;
+  apage(`<div class="card narrow"><h1>Логин и пароль</h1><p>Отправьте это сообщение. Пароль больше нигде не показывается.</p>
+    <textarea id="msg" rows="9" readonly>${esc(msg)}</textarea>
+    <div class="actions"><button class="btn" id="copy">Скопировать</button><a class="btn ghost" href="${L('/admin/user/' + u.id)}">К пользователю</a></div></div>`);
+  $('#copy').onclick = (e) => { navigator.clipboard.writeText($('#msg').value); e.target.textContent = 'Скопировано'; };
+}
+function viewUserForm(id, q) {
+  const isNew = id === 'new', d = A();
+  let u = isNew ? null : d.users.find((x) => x.id === id);
+  if (!isNew && !u) return go('/admin/users', true);
+  let leadId = '';
+  if (isNew) {
+    const lead = d.leads.find((l) => l.id === q.get('lead'));
+    u = { role: 'student', access: [] };
+    if (lead) { leadId = lead.id; u.name = lead.name; if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(lead.contact)) u.email = lead.contact; else u.phone = lead.contact; if (lead.courseId) u.access = [{ courseId: lead.courseId }]; if (lead.message) u.note = lead.message; }
+  }
+  const self = u.id === d.me;
+  apage(`<p class="crumbs"><a href="${L('/admin/users')}">Ученики</a> / ${isNew ? 'Новый ученик' : esc(u.email)}</p>
+    <form class="card" id="uf"><div class="cols">
+      <label class="grow">Email (логин)<input type="email" name="email" value="${esc(u.email)}" required></label>
+      <label class="grow">Имя<input name="name" value="${esc(u.name)}"></label>
+      <label class="grow">Телефон / Telegram<input name="phone" value="${esc(u.phone)}"></label></div>
+      ${isNew ? `<label>Пароль (пусто = сгенерировать автоматически)<input name="password" minlength="8" autocomplete="off"></label>` : ''}
+      ${isAdminRole() && !self ? `<label>Роль<select name="role">${Object.entries(ROLES).map(([k, v]) => `<option value="${k}" ${u.role === k ? 'selected' : ''}>${v}</option>`).join('')}</select></label>` : ''}
+      <h3>Доступ к курсам</h3>${d.courses.length ? '' : '<p class="muted">Сначала создайте курс.</p>'}
+      ${d.courses.map((c) => { const a = (u.access || []).find((x) => x.courseId === c.id); return `<div class="cols access">
+        <label class="check grow"><input type="checkbox" name="courses[]" value="${esc(c.id)}" ${a ? 'checked' : ''}> ${esc(c.title)}</label>
+        <label>до (пусто = навсегда)<input type="date" name="until_${esc(c.id)}" value="${esc(a && a.until)}"></label></div>`; }).join('')}
+      <label>Оплата (сумма, дата, способ)<input name="paid" value="${esc(u.paid)}" placeholder="49 900 ₽, 05.12, перевод на ИП"></label>
+      <label>Заметка<textarea name="note" rows="2">${esc(u.note)}</textarea></label>
+      ${!isNew && !self ? `<label class="check"><input type="checkbox" name="disabled" ${u.disabled ? 'checked' : ''}> Отключить вход</label>` : ''}
+      <button class="btn">${isNew ? 'Создать и показать логин' : 'Сохранить'}</button></form>
+    ${isNew ? '' : `<div class="actions"><button class="btn ghost" id="reset" data-id="${esc(u.id)}">Сбросить пароль</button>${self ? '' : `<button class="link red" id="delu" data-id="${esc(u.id)}">Удалить</button>`}</div>`}`);
+  bindForm('#uf', async (f) => {
+    const access = (f['courses[]'] || []).map((cid) => ({ courseId: cid, until: f['until_' + cid] || '' }));
+    const r = await api('POST', '/api/admin/users', { id: isNew ? '' : u.id, email: f.email, name: f.name, phone: f.phone, paid: f.paid, note: f.note, password: f.password || '', leadId, access, role: f.role || u.role || 'student', disabled: !!f.disabled });
+    await loadAdmin();
+    if (r.password) credentialsView(r.user, r.password); else { flash('Сохранено.'); go('/admin/user/' + r.user.id); }
+  });
+  confirmClick('#reset', 'Сгенерировать новый пароль? Старый перестанет работать.', async (uid) => { const r = await api('POST', '/api/admin/users/' + uid + '/reset'); credentialsView(r.user, r.password); });
+  confirmClick('#delu', 'Удалить пользователя?', async (uid) => { await api('DELETE', '/api/admin/users/' + uid); await loadAdmin(); flash('Пользователь удалён.'); go('/admin/users'); });
+}
+function viewLeads() {
+  const leads = A().leads.slice().reverse();
+  apage(`<div class="row-head"><h1>Заявки</h1>${leads.length ? '<button class="btn ghost small" id="csv">Скачать CSV</button>' : ''}</div>
+    ${!leads.length ? '<div class="card empty" style="margin-top:14px">Заявок пока нет. Они появятся, когда посетители заполнят форму на сайте.</div>' :
+    `<table><tr><th>Дата</th><th>Имя / контакт</th><th>Курс</th><th>Сообщение</th><th>Статус и комментарий</th><th></th></tr>
+    ${leads.map((l) => `<tr class="st-${esc(l.status)}"><td class="small">${fmtDate(l.createdAt)}</td><td><b>${esc(l.name)}</b><br>${esc(l.contact)}</td>
+      <td class="small">${esc(courseTitle(l.courseId))}</td><td class="small" style="white-space:pre-line">${esc(l.message)}</td>
+      <td><form class="cols leadst" data-id="${esc(l.id)}"><select name="status">${Object.entries(STATUSES).map(([k, v]) => `<option value="${k}" ${l.status === k ? 'selected' : ''}>${v}</option>`).join('')}</select>
+        <input name="comment" value="${esc(l.comment)}" placeholder="комментарий"><button class="btn small ghost">ок</button></form></td>
+      <td class="small"><a href="${L('/admin/user/new?lead=' + l.id)}">выдать доступ</a><br><button class="link red dellead" data-id="${esc(l.id)}">удалить</button></td></tr>`).join('')}</table>`}`);
+  document.querySelectorAll('.leadst').forEach((f) => f.onsubmit = async (e) => {
+    e.preventDefault();
+    try { await api('POST', '/api/admin/leads/' + f.dataset.id, formData(f)); await loadAdmin(); flash('Заявка обновлена.'); render(); } catch (err) { alert(err.message); }
+  });
+  confirmClick('.dellead', 'Удалить заявку?', async (lid) => { await api('DELETE', '/api/admin/leads/' + lid); await loadAdmin(); render(); });
+  const csv = $('#csv'); if (csv) csv.onclick = () => {
+    const qq = (v) => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+    const rows = [['Дата', 'Имя', 'Контакт', 'Курс', 'Сообщение', 'Статус', 'Комментарий']].concat(A().leads.map((l) => [fmtDate(l.createdAt), l.name, l.contact, courseTitle(l.courseId), l.message, STATUSES[l.status], l.comment]));
+    const blob = new Blob(['﻿' + rows.map((r) => r.map(qq).join(';')).join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'leads.csv'; a.click();
+  };
+}
+function viewSettings() {
+  if (!isAdminRole()) return go('/admin', true);
+  const s = A().settings;
+  apage(`<form class="card" id="sf"><h1>Настройки</h1><p class="muted">Тексты рекламной страницы, название проекта и реквизиты меняются в начале файла index.html (блок SITE).</p>
+    <h3>Связь с куратором</h3>
+    <label>Ссылка на куратора (https://t.me/...)<input name="curatorLink" value="${esc(s.curatorLink)}" placeholder="https://t.me/curator"></label>
+    <label>Текст в блоке «Связь с куратором»<textarea name="curatorText" rows="2">${esc(s.curatorText)}</textarea></label>
+    <h3>Поддержка</h3>
+    <div class="cols"><label class="grow">Ссылка поддержки (https://t.me/...)<input name="contactLink" value="${esc(s.contactLink)}" placeholder="https://t.me/support"></label>
+    <label class="grow">Текст кнопки<input name="contactText" value="${esc(s.contactText)}"></label></div>
+    <input type="hidden" name="siteTitle" value="${esc(s.siteTitle)}"><input type="hidden" name="heroTitle" value="${esc(s.heroTitle)}"><input type="hidden" name="heroText" value="${esc(s.heroText)}">
+    <button class="btn">Сохранить</button></form>`);
+  bindForm('#sf', async (d) => { await api('PUT', '/api/admin/settings', d); await loadAdmin(); await loadPublic(); flash('Настройки сохранены.'); render(); });
+}
+
+// ---------- маршрутизация ----------
+async function loadPublic() {
+  const d = await api('GET', '/api/public');
+  state = { settings: d.settings || {}, courses: d.courses || [], user: d.user };
+}
+async function render() {
+  const path = currentPath(), q = new URLSearchParams(location.search);
+  const parts = path.split('/').filter(Boolean);
+  renderHeader(); renderFooter();
+  document.title = SITE.hero.title;
+  try {
+    if (!parts.length || path === '/index.html') return go('/main', true);
+    switch (parts[0]) {
+      case 'main': return viewMain();
+      case 'auth': return viewAuth(q.get('next'));
+      case 'buying': return viewBuying();
+      case 'learn': return await viewLearn();
+      case 'course': return viewCourse(parts[1]);
+      case 'lesson': return await viewLesson(parts[1]);
+      case 'account': return viewAccount();
+      case 'faq': case 'support': case 'privacy': case 'terms': return viewDoc(parts[0]);
+      case 'admin': {
+        if (!state.user) return go('/auth?next=' + encodeURIComponent(path + location.search), true);
+        if (!isStaff()) return go(homeFor(), true);
+        if (!adminData) await loadAdmin();
+        const [, sec, id] = parts;
+        if (!sec) return viewDashboard();
+        if (sec === 'courses') return viewCourses();
+        if (sec === 'course') return viewCourseForm(id);
+        if (sec === 'lesson') return viewLessonForm(id, q);
+        if (sec === 'users') return viewUsers(q);
+        if (sec === 'user') return viewUserForm(id, q);
+        if (sec === 'leads') return viewLeads();
+        if (sec === 'settings') return viewSettings();
+      }
+    }
+    viewMessage('Страница не найдена');
+  } catch (e) {
+    if (e.status === 401) return go('/auth', true);
+    viewMessage('Ошибка', e.message);
+  }
+}
+
+// внутренние ссылки открываются без перезагрузки страницы
+document.addEventListener('click', (e) => {
+  const a = e.target.closest('a[href]');
+  if (!a || a.hasAttribute('data-ext') || a.target === '_blank' || e.ctrlKey || e.metaKey || e.shiftKey || e.button !== 0) return;
+  const url = new URL(a.href, location.href);
+  if (url.origin !== location.origin || (BASE && !url.pathname.startsWith(BASE))) return;
+  e.preventDefault();
+  if (url.pathname === location.pathname && url.search === location.search && url.hash) { const t = document.getElementById(url.hash.slice(1)); if (t) t.scrollIntoView(); return; }
+  history.pushState(null, '', url.pathname + url.search + url.hash);
+  render();
+});
+window.addEventListener('popstate', render);
+
+(async () => {
+  renderHeader(); renderFooter();
+  if (!SECURE) return page(`<div class="card center"><h1>Небезопасное подключение</h1><p>В index.html адрес API должен начинаться с <b>https://</b>.</p></div>`);
+  try { await loadPublic(); } catch (e) { /* сервер недоступен: показываем рекламную страницу без данных курсов */ }
+  render();
+})();
+</script>
+</body>
+</html>
