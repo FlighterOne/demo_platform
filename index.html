@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>Онлайн-школа</title>
+<script>
+  // ============ НАСТРОЙКА ============
+  // Адрес бэкенда на Amvera (обязательно https://). Пример: https://demo-platform-username.amvera.io
+  window.API_URL = 'https://ВАШ-ПРОЕКТ.amvera.io';
+  // ====================================
+</script>
+<style>
+:root{--bg:#f6f5f2;--card:#fff;--ink:#1d1d1f;--muted:#6b6b70;--line:#e4e2dc;--acc:#3b5bdb;--acc2:#e9edff;--ok:#2b8a3e;--err:#c92a2a;--r:14px}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.55 -apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+a{color:var(--acc)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+.top{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.top-in{display:flex;align-items:center;justify-content:space-between;min-height:60px;gap:16px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:18px;color:var(--ink);text-decoration:none}
+nav{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+nav a{color:var(--muted);text-decoration:none}nav a.on,nav a:hover{color:var(--ink)}
+main{padding:28px 20px 60px;min-height:70vh}
+h1{font-size:30px;line-height:1.2;margin:0 0 14px}h2{font-size:21px;margin:26px 0 12px}h3{margin:0 0 10px}
+.muted{color:var(--muted)}.small{font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;margin-bottom:18px}
+.card h2:first-child{margin-top:0}
+.narrow{max-width:440px;margin:30px auto}.center{text-align:center;max-width:620px;margin:30px auto}
+.empty{text-align:center;color:var(--muted)}
+.btn{display:inline-block;background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 18px;font:inherit;font-weight:600;text-decoration:none;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}.btn:disabled{opacity:.6;cursor:default}
+.btn.ghost{background:var(--acc2);color:var(--acc)}.btn.small{padding:6px 12px;font-size:14px}
+.link{background:none;border:0;padding:0;font:inherit;color:var(--muted);cursor:pointer}.red{color:var(--err)!important}
+label{display:block;margin:0 0 14px;font-size:14px;color:var(--muted)}
+input,textarea,select{display:block;width:100%;margin-top:5px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;font:inherit;color:var(--ink);background:#fff}
+textarea{resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--acc2);border-color:var(--acc)}
+label.check{display:flex;align-items:center;gap:8px;color:var(--ink);font-size:15px}
+label.check input{width:auto;margin:0}
+.cols{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}.cols .grow{flex:1;min-width:180px}
+td .cols{flex-wrap:nowrap}td .cols input{min-width:120px}td .cols select{width:auto}
+.access{border-top:1px solid var(--line);padding-top:10px}
+.flash{padding:12px 16px;border-radius:10px;margin-bottom:18px;background:#ebfbee;color:var(--ok)}.flash.err{background:#fff5f5;color:var(--err)}
+.hero{padding:30px 0 20px;max-width:760px}.hero h1{font-size:40px}.lead-text{font-size:19px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:18px;margin-bottom:24px}
+.course h2{margin-top:0}.course h2 a{color:var(--ink);text-decoration:none}
+.meta{color:var(--muted);font-size:14px}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
+.lead{max-width:520px}.hp{position:absolute;left:-9999px}
+.crumbs{color:var(--muted);font-size:14px}.crumbs a{color:var(--muted)}
+.lessons{padding-left:22px}.lessons li{padding:8px 0;border-bottom:1px solid var(--line)}
+.lessons li.locked{color:var(--muted)}.lessons.compact li{padding:5px 0;font-size:14px}.lessons li.cur a{font-weight:700;color:var(--ink)}
+.tag{display:inline-block;font-size:12px;padding:2px 8px;border-radius:20px;background:#f1f0ec;color:var(--muted);margin-left:6px;vertical-align:middle}
+.tag.free{background:#ebfbee;color:var(--ok)}.tag.done{background:var(--acc2);color:var(--acc)}
+.lesson-layout{display:grid;grid-template-columns:1fr 290px;gap:24px;align-items:start}
+.side{position:sticky;top:80px}
+.video{position:relative;padding-top:56.25%;background:#000;border-radius:var(--r);overflow:hidden;margin-bottom:20px}
+.video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.content{font-size:17px}.content img{max-width:100%}
+.hw{background:#fffbea;border-color:#f5e6a8}
+.pager{display:flex;justify-content:space-between;gap:10px;margin:26px 0}
+.progress{height:8px;background:#eee;border-radius:8px;overflow:hidden}.progress div{height:100%;background:var(--acc)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{text-decoration:none;color:var(--ink);text-align:center}.stat b{display:block;font-size:34px}.stat span{color:var(--muted)}.stat.hot b{color:var(--err)}
+.row-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.row-head h1,.row-head h2{margin:0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}th{font-size:13px;color:var(--muted);font-weight:600;background:#fbfaf8}
+tr.off td{opacity:.5}tr.st-new td:first-child{box-shadow:inset 3px 0 var(--acc)}
+.search{display:flex;gap:8px;max-width:480px}.search input{margin:0}
+.foot{color:var(--muted);font-size:14px;padding:24px 20px}
+.loading{color:var(--muted);text-align:center;padding:60px 0}
+@media(max-width:800px){.lesson-layout,.two{grid-template-columns:1fr}.side{position:static}.stats{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:30px}table{display:block;overflow-x:auto}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap top-in"><a class="logo" href="#/" id="logo">Онлайн-школа</a><nav id="nav"></nav></div></header>
+<main class="wrap" id="app"><div class="loading">Загрузка…</div></main>
+<footer class="foot wrap" id="foot"></footer>
+
+<script>
+'use strict';
+// ---------- соединение с API ----------
+// Если страницу отдаёт сам бэкенд (локальная разработка) или адрес ещё не настроен, ходим на тот же адрес.
+const pageIsLocal = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+const API = (pageIsLocal || /ВАШ-ПРОЕКТ/.test(window.API_URL || '')) ? '' : String(window.API_URL || '').replace(/\/$/, '');
+const isLocal = API === '' ? (pageIsLocal || location.protocol === 'https:') : /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(API);
+// Трафик только по HTTPS: на незашифрованный адрес (кроме локальной разработки) запросы не отправляются.
+const SECURE = API.startsWith('https://') || isLocal;
+
+let token = localStorage.getItem('token') || '';
+let state = { settings: {}, courses: [], user: null };
+let adminData = null;
+let flashMsg = null;
+
+async function api(method, path, body) {
+  if (!SECURE) throw new Error('Адрес API должен начинаться с https://');
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers.Authorization = 'Bearer ' + token;
+  let res;
+  try {
+    res = await fetch((API || '') + path, { method, headers, body: body ? JSON.stringify(body) : undefined, credentials: 'omit', cache: 'no-store' });
+  } catch (e) { throw new Error('Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.'); }
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401 && token && path !== '/api/login') { setToken(''); }
+  if (!res.ok) throw Object.assign(new Error(data.error || 'Ошибка ' + res.status), { status: res.status });
+  return data;
+}
+function setToken(t) { token = t; t ? localStorage.setItem('token', t) : localStorage.removeItem('token'); }
+
+// ---------- помощники ----------
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const fmtDate = (iso) => iso ? iso.slice(0, 16).replace('T', ' ') : '';
+const ruDate = (d) => d ? d.split('-').reverse().join('.') : '';
+const plural = (n, a, b, c) => n % 10 === 1 && n % 100 !== 11 ? a : ([2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? b : c);
+const isAdmin = () => state.user && state.user.role === 'admin';
+function flash(msg, type = 'ok') { flashMsg = { msg, type }; }
+function go(hash) { if (location.hash === hash) render(); else location.hash = hash; }
+function formData(form) {
+  const o = {};
+  for (const el of form.elements) {
+    if (!el.name) continue;
+    if (el.type === 'checkbox') { if (el.name.endsWith('[]')) { (o[el.name] ||= []); if (el.checked) o[el.name].push(el.value); } else o[el.name] = el.checked; }
+    else o[el.name] = el.value;
+  }
+  return o;
+}
+// Ссылка на видео → адрес для встраивания (YouTube, Rutube, VK, Kinescope).
+function embedUrl(raw) {
+  let u; try { u = new URL(String(raw || '').trim()); } catch { return ''; }
+  const h = u.hostname.replace(/^(www|m)\./, ''); let m;
+  if (h === 'youtu.be') return 'https://www.youtube.com/embed/' + u.pathname.slice(1);
+  if (h === 'youtube.com') {
+    if (u.searchParams.get('v')) return 'https://www.youtube.com/embed/' + u.searchParams.get('v');
+    if ((m = u.pathname.match(/^\/(?:shorts|live|embed)\/([\w-]+)/))) return 'https://www.youtube.com/embed/' + m[1];
+  }
+  if (h === 'rutube.ru' && !u.pathname.startsWith('/play/embed') && (m = u.pathname.match(/\/video\/(?:private\/)?(\w+)/)))
+    return 'https://rutube.ru/play/embed/' + m[1] + (u.searchParams.get('p') ? '/?p=' + u.searchParams.get('p') : '');
+  if ((h === 'vk.com' || h === 'vkvideo.ru') && (m = (u.pathname + (u.searchParams.get('z') || '')).match(/video(-?\d+)_(\d+)/)))
+    return 'https://vk.com/video_ext.php?oid=' + m[1] + '&id=' + m[2] + '&hd=2';
+  if (h === 'kinescope.io' && !u.pathname.startsWith('/embed/')) return 'https://kinescope.io/embed' + u.pathname;
+  return u.protocol === 'https:' ? u.toString() : '';
+}
+
+// ---------- каркас ----------
+function renderNav() {
+  const s = state.settings, p = location.hash || '#/';
+  document.title = s.siteTitle || 'Онлайн-школа';
+  $('#logo').textContent = s.siteTitle || 'Онлайн-школа';
+  $('#foot').textContent = '© ' + new Date().getFullYear() + ' ' + (s.siteTitle || '');
+  const on = (pre) => p.startsWith(pre) ? 'on' : '';
+  let html = '';
+  if (state.user) {
+    if (isAdmin()) html += `<a href="#/admin" class="${p === '#/admin' ? 'on' : ''}">Обзор</a><a href="#/admin/courses" class="${on('#/admin/course') || on('#/admin/lesson')}">Курсы</a><a href="#/admin/users" class="${on('#/admin/user')}">Ученики</a><a href="#/admin/leads" class="${on('#/admin/leads')}">Заявки</a><a href="#/admin/settings" class="${on('#/admin/settings')}">Настройки</a>`;
+    else html += `<a href="#/my" class="${on('#/my')}">Мои курсы</a><a href="#/account" class="${on('#/account')}">Пароль</a>`;
+    html += `<button class="link" id="logout">Выйти</button>`;
+  } else html = `<a href="#/login" class="btn small ghost">Войти</a>`;
+  $('#nav').innerHTML = html;
+  const lo = $('#logout'); if (lo) lo.onclick = async () => { try { await api('POST', '/api/logout'); } catch {} setToken(''); state.user = null; adminData = null; go('#/'); };
+}
+function page(html) {
+  const f = flashMsg ? `<div class="flash ${flashMsg.type}">${esc(flashMsg.msg)}</div>` : '';
+  flashMsg = null;
+  $('#app').innerHTML = f + html;
+  window.scrollTo(0, 0);
+}
+function bindForm(sel, handler) {
+  const form = $(sel); if (!form) return;
+  form.onsubmit = async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button[type=submit],button:not([type])'); if (btn) btn.disabled = true;
+    const old = form.querySelector('.flash.err'); if (old) old.remove();
+    try { await handler(formData(form), form); }
+    catch (err) { form.insertAdjacentHTML('afterbegin', `<div class="flash err">${esc(err.message)}</div>`); }
+    finally { if (btn) btn.disabled = false; }
+  };
+}
+function confirmClick(sel, text, fn) {
+  document.querySelectorAll(sel).forEach((el) => el.onclick = async (e) => { e.preventDefault(); if (!confirm(text)) return; try { await fn(el.dataset.id, el); } catch (err) { alert(err.message); } });
+}
+
+// ---------- публичные страницы ----------
+function leadForm(courseId, courses) {
+  let sel = '';
+  if (courseId) sel = `<input type="hidden" name="courseId" value="${esc(courseId)}">`;
+  else if (courses && courses.length > 1) sel = `<label>Курс<select name="courseId">${courses.map((c) => `<option value="${esc(c.id)}">${esc(c.title)}</option>`).join('')}</select></label>`;
+  else if (courses && courses.length === 1) sel = `<input type="hidden" name="courseId" value="${esc(courses[0].id)}">`;
+  const s = state.settings;
+  return `<form class="card lead" id="leadform"><h3>Хочу полный доступ</h3><p class="muted">Оставьте контакт, и мы расскажем о курсе и условиях оплаты.</p>${sel}
+    <label>Имя<input name="name" required maxlength="200"></label>
+    <label>Telegram, телефон или email<input name="contact" required maxlength="200" placeholder="@username"></label>
+    <label>Вопрос (необязательно)<textarea name="message" rows="2" maxlength="2000"></textarea></label>
+    <input name="website" class="hp" tabindex="-1" autocomplete="off"><button class="btn">Оставить заявку</button>
+    ${s.contactLink && /^https:\/\//.test(s.contactLink) ? `<p class="muted small">или <a href="${esc(s.contactLink)}" target="_blank" rel="noopener">${esc(s.contactText || 'напишите нам')}</a></p>` : ''}</form>`;
+}
+function bindLead() {
+  bindForm('#leadform', async (d, form) => {
+    await api('POST', '/api/leads', { name: d.name, contact: d.contact, courseId: d.courseId || '', message: d.message, website: d.website });
+    form.outerHTML = `<div class="card lead"><h3>Заявка отправлена</h3><p>Спасибо! Мы свяжемся с вами в ближайшее время и расскажем, как получить доступ к курсу.</p></div>`;
+  });
+}
+
+function viewHome() {
+  const s = state.settings, cs = state.courses;
+  let html = `<section class="hero"><h1>${esc(s.heroTitle)}</h1><p class="lead-text">${esc(s.heroText)}</p></section>`;
+  if (!cs.length) html += `<div class="card empty">Курсы скоро появятся.</div>`;
+  html += `<div class="grid">` + cs.map((c) => {
+    const free = c.lessons.filter((l) => l.isFree), n = c.lessons.length;
+    return `<article class="card course"><h2><a href="#/course/${esc(c.slug)}">${esc(c.title)}</a>${c.published ? '' : '<span class="tag">скрыт</span>'}</h2>
+      ${c.author ? `<p class="muted">Автор: ${esc(c.author)}</p>` : ''}<div class="desc">${c.description || ''}</div>
+      <p class="meta">${n} ${plural(n, 'урок', 'урока', 'уроков')}${c.price ? ` · <b>${esc(c.price)}</b>` : ''}</p>
+      <div class="actions">${c.access ? `<a class="btn" href="#/course/${esc(c.slug)}">Перейти к урокам</a>` :
+        (free.length ? `<a class="btn" href="#/lesson/${esc(free[0].id)}">Смотреть бесплатный урок</a>` : '') + `<a class="btn ghost" href="#/course/${esc(c.slug)}">Программа курса</a>`}</div></article>`;
+  }).join('') + `</div>`;
+  const notOwned = cs.filter((c) => !c.access);
+  if (notOwned.length) html += leadForm('', notOwned);
+  page(html); bindLead();
+}
+
+function lessonList(c, curId, compact) {
+  return `<ol class="lessons ${compact ? 'compact' : ''}">` + c.lessons.map((l) => {
+    const open = c.access || l.isFree;
+    const tag = l.isFree && !c.access ? '<span class="tag free">бесплатно</span>' : !open ? (compact ? ' 🔒' : '<span class="tag">🔒</span>') : l.viewed && !compact ? '<span class="tag done">просмотрен</span>' : '';
+    return `<li class="${l.id === curId ? 'cur' : ''} ${open ? '' : 'locked'}">${open ? `<a href="#/lesson/${esc(l.id)}">${esc(l.title)}</a>` : `<span>${esc(l.title)}</span>`}${tag}</li>`;
+  }).join('') + `</ol>`;
+}
+
+function viewCourse(slug) {
+  const c = state.courses.find((x) => x.slug === slug);
+  if (!c) return viewMessage('Курс не найден');
+  page(`<p class="crumbs"><a href="#/">Главная</a> / ${esc(c.title)}</p><h1>${esc(c.title)}</h1>
+    ${c.author ? `<p class="muted">Автор: ${esc(c.author)}</p>` : ''}<div class="desc">${c.description || ''}</div>
+    ${c.price && !c.access ? `<p>Стоимость: <b>${esc(c.price)}</b></p>` : ''}<h2>Программа</h2>${lessonList(c)}
+    ${c.access ? '' : leadForm(c.id)}`);
+  bindLead();
+}
+
+async function viewLesson(id) {
+  let d;
+  try { d = await api('GET', '/api/lessons/' + encodeURIComponent(id)); }
+  catch (e) { return viewMessage(e.status === 404 ? 'Урок не найден' : 'Ошибка', e.status === 404 ? '' : e.message); }
+  const c = d.course, l = d.lesson;
+  const crumbs = `<p class="crumbs"><a href="#/">Главная</a> / <a href="#/course/${esc(c.slug)}">${esc(c.title)}</a> / ${esc(l.title)}</p>`;
+  if (d.locked) {
+    return page(crumbs + `<div class="card center"><h1>🔒 ${esc(l.title)}</h1><p>Этот урок доступен ученикам курса «${esc(c.title)}».</p>
+      ${state.user ? `<p class="muted">У вашего аккаунта пока нет доступа к этому курсу. Если вы уже оплатили, напишите нам.</p>` : `<p><a class="btn" href="#/login?next=${encodeURIComponent('#/lesson/' + l.id)}">Войти</a></p>`}</div>` + leadForm(c.id)), bindLead();
+  }
+  const i = c.lessons.findIndex((x) => x.id === l.id), prev = c.lessons[i - 1], next = c.lessons[i + 1];
+  const canOpen = (x) => x && (c.access || x.isFree);
+  const src = embedUrl(l.videoUrl);
+  page(crumbs + `<div class="lesson-layout"><article>
+    <h1>${esc(l.title)}${l.published ? '' : ' <span class="tag">черновик</span>'}</h1>
+    ${src ? `<div class="video"><iframe src="${esc(src)}" allow="autoplay; encrypted-media; fullscreen; picture-in-picture" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>` : ''}
+    <div class="content">${l.content || ''}</div>
+    ${l.homework ? `<div class="card hw"><h3>Домашнее задание</h3><div class="content">${l.homework}</div></div>` : ''}
+    <div class="pager">${canOpen(prev) ? `<a class="btn ghost" href="#/lesson/${esc(prev.id)}">← ${esc(prev.title)}</a>` : '<span></span>'}
+      ${canOpen(next) ? `<a class="btn" href="#/lesson/${esc(next.id)}">${esc(next.title)} →</a>` : ''}</div>
+    ${c.access ? '' : leadForm(c.id)}</article>
+    <aside class="card side"><h3>${esc(c.title)}</h3>${lessonList(c, l.id, true)}</aside></div>`);
+  bindLead();
+}
+
+function viewMessage(title, text) { page(`<div class="card center"><h1>${esc(title)}</h1>${text ? `<p>${esc(text)}</p>` : ''}<p><a class="btn" href="#/">На главную</a></p></div>`); }
+
+// ---------- вход и кабинет ----------
+function viewLogin(next) {
+  if (state.user) return go(isAdmin() ? '#/admin' : '#/my');
+  page(`<form class="card narrow" id="login"><h1>Вход для учеников</h1>
+    <label>Email<input type="email" name="email" required autofocus autocomplete="username"></label>
+    <label>Пароль<input type="password" name="password" required autocomplete="current-password"></label>
+    <button class="btn">Войти</button>
+    <p class="muted small">Логин и пароль выдаются после оплаты курса. Забыли пароль? Напишите нам, и мы пришлём новый.</p></form>`);
+  bindForm('#login', async (d) => {
+    const r = await api('POST', '/api/login', { email: d.email, password: d.password });
+    setToken(r.token); await loadPublic();
+    go(next && next.startsWith('#/') ? next : (r.user.role === 'admin' ? '#/admin' : '#/my'));
+  });
+}
+
+async function viewMy() {
+  if (!state.user) return go('#/login?next=' + encodeURIComponent('#/my'));
+  const d = await api('GET', '/api/me');
+  let html = `<h1>Мои курсы</h1>`;
+  if (!d.courses.length) html += `<div class="card empty">У вас пока нет доступа к курсам. Если вы уже оплатили, напишите нам.</div>`;
+  html += `<div class="grid">` + d.courses.map((c) => {
+    const done = c.lessons.filter((l) => l.viewed).length, n = c.lessons.length;
+    const nextL = c.lessons.find((l) => !l.viewed) || c.lessons[0];
+    return `<article class="card course"><h2><a href="#/course/${esc(c.slug)}">${esc(c.title)}</a></h2>
+      <div class="progress"><div style="width:${n ? Math.round(done / n * 100) : 0}%"></div></div>
+      <p class="meta">Просмотрено ${done} из ${n}${c.until ? ' · доступ до ' + ruDate(c.until) : ''}</p>
+      ${nextL ? `<a class="btn" href="#/lesson/${esc(nextL.id)}">${done ? 'Продолжить' : 'Начать'}</a>` : ''}</article>`;
+  }).join('') + `</div>`;
+  page(html);
+}
+
+function viewAccount() {
+  if (!state.user) return go('#/login');
+  page(`<form class="card narrow" id="pw"><h1>Смена пароля</h1>
+    <label>Текущий пароль<input type="password" name="current" required autocomplete="current-password"></label>
+    <label>Новый пароль (от 8 символов)<input type="password" name="password" minlength="8" required autocomplete="new-password"></label>
+    <button class="btn">Сохранить</button></form>`);
+  bindForm('#pw', async (d) => { await api('POST', '/api/me/password', d); flash('Пароль изменён.'); go(isAdmin() ? '#/admin' : '#/my'); });
+}
+
+// ---------- админ-панель ----------
+const STATUSES = { new: 'Новая', contacted: 'Связались', paid: 'Оплатил', rejected: 'Отказ' };
+async function loadAdmin() { adminData = await api('GET', '/api/admin/data'); return adminData; }
+const A = () => adminData;
+const courseTitle = (id) => (A().courses.find((c) => c.id === id) || {}).title || '';
+
+function viewDashboard() {
+  const d = A(), newLeads = d.leads.filter((l) => l.status === 'new').length;
+  const leads = d.leads.slice().reverse().slice(0, 5);
+  page(`<h1>Админ-панель</h1><div class="stats">
+    <a class="card stat" href="#/admin/courses"><b>${d.courses.length}</b><span>курсов</span></a>
+    <a class="card stat" href="#/admin/courses"><b>${d.lessons.length}</b><span>уроков</span></a>
+    <a class="card stat" href="#/admin/users"><b>${d.users.filter((u) => u.role === 'student').length}</b><span>учеников</span></a>
+    <a class="card stat ${newLeads ? 'hot' : ''}" href="#/admin/leads"><b>${newLeads}</b><span>новых заявок</span></a></div>
+    <div class="actions"><a class="btn" href="#/admin/user/new">+ Выдать доступ ученику</a><a class="btn ghost" href="#/admin/course/new">+ Новый курс</a><a class="btn ghost" href="#/">Открыть сайт</a></div>
+    <h2>Последние заявки</h2>${leads.length ? `<table><tr><th>Дата</th><th>Имя</th><th>Контакт</th><th></th></tr>${leads.map((l) => `<tr><td>${fmtDate(l.createdAt)}</td><td>${esc(l.name)}</td><td>${esc(l.contact)}</td><td><a href="#/admin/user/new?lead=${esc(l.id)}">выдать доступ</a></td></tr>`).join('')}</table>` : '<p class="muted">Заявок пока нет.</p>'}`);
+}
+
+function viewCourses() {
+  const d = A();
+  page(`<div class="row-head"><h1>Курсы</h1><a class="btn" href="#/admin/course/new">+ Новый курс</a></div>
+    ${!d.courses.length ? '<div class="card empty">Курсов пока нет. Создайте первый.</div>' : `<table><tr><th>Курс</th><th>Уроков</th><th>Учеников</th><th>Статус</th><th></th></tr>
+    ${d.courses.map((c) => `<tr><td><a href="#/admin/course/${esc(c.id)}">${esc(c.title)}</a><div class="muted small">${esc(c.author)}</div></td>
+      <td>${d.lessons.filter((l) => l.courseId === c.id).length}</td><td>${d.users.filter((u) => u.role === 'student' && (u.access || []).some((a) => a.courseId === c.id)).length}</td>
+      <td>${c.published ? 'опубликован' : 'скрыт'}</td><td><a href="#/course/${esc(c.slug)}">на сайте</a></td></tr>`).join('')}</table>`}`);
+}
+
+function viewCourseForm(id) {
+  const isNew = id === 'new', c = isNew ? { published: true } : A().courses.find((x) => x.id === id);
+  if (!c) return go('#/admin/courses');
+  const lessons = isNew ? [] : A().lessons.filter((l) => l.courseId === id);
+  page(`<p class="crumbs"><a href="#/admin/courses">Курсы</a> / ${isNew ? 'Новый курс' : esc(c.title)}</p><div class="two">
+    <form class="card" id="cf"><h2>${isNew ? 'Новый курс' : 'Настройки курса'}</h2>
+      <label>Название<input name="title" value="${esc(c.title)}" required></label>
+      <label>Эксперт / автор<input name="author" value="${esc(c.author)}"></label>
+      <label>Адрес страницы (латиницей, можно оставить пустым)<input name="slug" value="${esc(c.slug)}"></label>
+      <label>Описание (можно HTML)<textarea name="description" rows="6">${esc(c.description)}</textarea></label>
+      <label>Цена (как показывать на сайте)<input name="price" value="${esc(c.price)}" placeholder="49 900 ₽"></label>
+      <label class="check"><input type="checkbox" name="published" ${c.published ? 'checked' : ''}> Показывать на сайте</label>
+      <button class="btn">Сохранить</button></form>
+    ${isNew ? '' : `<div><div class="card"><div class="row-head"><h2>Уроки</h2><a class="btn small" href="#/admin/lesson/new?course=${esc(c.id)}">+ Урок</a></div>
+      ${lessons.length ? '' : '<p class="muted">Уроков пока нет. Первый урок по умолчанию будет бесплатным вводным.</p>'}
+      <ol class="lessons">${lessons.map((l) => `<li><a href="#/admin/lesson/${esc(l.id)}">${l.order}. ${esc(l.title)}</a>${l.isFree ? '<span class="tag free">бесплатный</span>' : ''}${l.published ? '' : '<span class="tag">черновик</span>'} <a class="small" href="#/lesson/${esc(l.id)}">↗</a></li>`).join('')}</ol></div>
+      <button class="link red" id="delc" data-id="${esc(c.id)}">Удалить курс</button></div>`}</div>`);
+  bindForm('#cf', async (d) => {
+    const r = await api('POST', '/api/admin/courses', { id: isNew ? '' : c.id, ...d });
+    await loadAdmin(); await loadPublic(); flash(isNew ? 'Курс создан. Теперь добавьте уроки.' : 'Курс сохранён.'); go('#/admin/course/' + r.id);
+  });
+  confirmClick('#delc', 'Удалить курс со всеми уроками? Это нельзя отменить.', async (cid) => { await api('DELETE', '/api/admin/courses/' + cid); await loadAdmin(); await loadPublic(); flash('Курс удалён.'); go('#/admin/courses'); });
+}
+
+function viewLessonForm(id, q) {
+  const isNew = id === 'new';
+  let l = isNew ? null : A().lessons.find((x) => x.id === id);
+  const course = A().courses.find((c) => c.id === (isNew ? q.get('course') : l && l.courseId));
+  if (!course) return go('#/admin/courses');
+  if (isNew) { const order = A().lessons.filter((x) => x.courseId === course.id).length + 1; l = { order, published: true, isFree: order === 1 }; }
+  page(`<p class="crumbs"><a href="#/admin/courses">Курсы</a> / <a href="#/admin/course/${esc(course.id)}">${esc(course.title)}</a> / ${isNew ? 'Новый урок' : esc(l.title)}</p>
+    <form class="card" id="lf"><div class="cols"><label class="grow">Название урока<input name="title" value="${esc(l.title)}" required></label>
+      <label>Порядок<input type="number" name="order" value="${l.order}" min="1" style="width:6em"></label></div>
+      <label>Ссылка на видео (YouTube, Rutube, VK, Kinescope или ссылка для встраивания)<input name="videoUrl" value="${esc(l.videoUrl)}" placeholder="https://rutube.ru/video/..."></label>
+      <label>Текст урока (можно HTML: &lt;p&gt;, &lt;b&gt;, &lt;a&gt;, &lt;ul&gt;)<textarea name="content" rows="10">${esc(l.content)}</textarea></label>
+      <label>Домашнее задание (видно только ученикам с доступом)<textarea name="homework" rows="4">${esc(l.homework)}</textarea></label>
+      <label class="check"><input type="checkbox" name="isFree" ${l.isFree ? 'checked' : ''}> Бесплатный (вводный) урок: открыт всем без входа</label>
+      <label class="check"><input type="checkbox" name="published" ${l.published ? 'checked' : ''}> Опубликован</label>
+      <div class="actions"><button class="btn">Сохранить</button>${isNew ? '' : `<a class="btn ghost" href="#/lesson/${esc(l.id)}">Посмотреть</a><button type="button" class="link red" id="dell" data-id="${esc(l.id)}">Удалить урок</button>`}</div></form>`);
+  bindForm('#lf', async (d) => {
+    await api('POST', '/api/admin/lessons', { id: isNew ? '' : l.id, courseId: course.id, ...d, order: parseInt(d.order, 10) || 1 });
+    await loadAdmin(); await loadPublic(); flash(isNew ? 'Урок добавлен.' : 'Урок сохранён.'); go('#/admin/course/' + course.id);
+  });
+  confirmClick('#dell', 'Удалить урок?', async (lid) => { await api('DELETE', '/api/admin/lessons/' + lid); await loadAdmin(); await loadPublic(); flash('Урок удалён.'); go('#/admin/course/' + course.id); });
+}
+
+function viewUsers(q) {
+  const s = (q.get('q') || '').toLowerCase();
+  const users = A().users.filter((u) => !s || u.email.includes(s) || (u.name || '').toLowerCase().includes(s)).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+  page(`<div class="row-head"><h1>Ученики</h1><a class="btn" href="#/admin/user/new">+ Выдать доступ</a></div>
+    <form class="search" id="us"><input name="q" value="${esc(s)}" placeholder="Поиск по email или имени"><button class="btn ghost small">Найти</button></form>
+    <table><tr><th>Email</th><th>Имя</th><th>Доступ</th><th>Оплата</th><th>Последний вход</th></tr>
+    ${users.map((u) => `<tr class="${u.disabled ? 'off' : ''}"><td><a href="#/admin/user/${esc(u.id)}">${esc(u.email)}</a>${u.role === 'admin' ? '<span class="tag">админ</span>' : ''}${u.disabled ? '<span class="tag">отключён</span>' : ''}</td>
+      <td>${esc(u.name)}</td><td class="small">${esc((u.access || []).map((a) => courseTitle(a.courseId) + (a.until ? ' (до ' + ruDate(a.until) + ')' : '')).filter(Boolean).join(', ') || '—')}</td>
+      <td class="small">${esc(u.paid)}</td><td class="small">${u.lastLogin ? fmtDate(u.lastLogin) : 'не входил'}</td></tr>`).join('')}</table>`);
+  $('#us').onsubmit = (e) => { e.preventDefault(); go('#/admin/users?q=' + encodeURIComponent($('#us [name=q]').value)); };
+}
+
+function credentialsView(u, password) {
+  const titles = (u.access || []).map((a) => '«' + courseTitle(a.courseId) + '»').join(', ');
+  const site = location.origin + location.pathname;
+  const msg = `Здравствуйте${u.name ? ', ' + u.name : ''}! ${titles ? 'Доступ к курсу ' + titles + ' открыт.' : 'Ваш аккаунт создан.'}\n\nСайт: ${site}#/login\nЛогин: ${u.email}\nПароль: ${password}\n\nПароль можно сменить в личном кабинете.`;
+  page(`<div class="card narrow"><h1>Логин и пароль</h1><p>Отправьте ученику это сообщение. Пароль больше нигде не показывается.</p>
+    <textarea id="msg" rows="9" readonly>${esc(msg)}</textarea>
+    <div class="actions"><button class="btn" id="copy">Скопировать</button><a class="btn ghost" href="#/admin/user/${esc(u.id)}">К ученику</a></div></div>`);
+  $('#copy').onclick = (e) => { navigator.clipboard.writeText($('#msg').value); e.target.textContent = 'Скопировано'; };
+}
+
+function viewUserForm(id, q) {
+  const isNew = id === 'new', d = A();
+  let u = isNew ? null : d.users.find((x) => x.id === id);
+  if (!isNew && !u) return go('#/admin/users');
+  let leadId = '';
+  if (isNew) {
+    const lead = d.leads.find((l) => l.id === q.get('lead'));
+    u = { role: 'student', access: [] };
+    if (lead) { leadId = lead.id; u.name = lead.name; if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(lead.contact)) u.email = lead.contact; else u.phone = lead.contact; if (lead.courseId) u.access = [{ courseId: lead.courseId }]; }
+  }
+  const self = u.id === d.me;
+  page(`<p class="crumbs"><a href="#/admin/users">Ученики</a> / ${isNew ? 'Новый ученик' : esc(u.email)}</p>
+    <form class="card" id="uf"><div class="cols">
+      <label class="grow">Email (логин)<input type="email" name="email" value="${esc(u.email)}" required></label>
+      <label class="grow">Имя<input name="name" value="${esc(u.name)}"></label>
+      <label class="grow">Телефон / Telegram<input name="phone" value="${esc(u.phone)}"></label></div>
+      ${isNew ? `<label>Пароль (пусто = сгенерировать автоматически)<input name="password" minlength="8" autocomplete="off"></label>` : ''}
+      <h3>Доступ к курсам</h3>${d.courses.length ? '' : '<p class="muted">Сначала создайте курс.</p>'}
+      ${d.courses.map((c) => { const a = (u.access || []).find((x) => x.courseId === c.id); return `<div class="cols access">
+        <label class="check grow"><input type="checkbox" name="courses[]" value="${esc(c.id)}" ${a ? 'checked' : ''}> ${esc(c.title)}</label>
+        <label>до (пусто = навсегда)<input type="date" name="until_${esc(c.id)}" value="${esc(a && a.until)}"></label></div>`; }).join('')}
+      <label>Оплата (сумма, дата, способ)<input name="paid" value="${esc(u.paid)}" placeholder="49 900 ₽, 05.12, перевод на ИП"></label>
+      <label>Заметка<textarea name="note" rows="2">${esc(u.note)}</textarea></label>
+      ${!isNew && !self ? `<label class="check"><input type="checkbox" name="admin" ${u.role === 'admin' ? 'checked' : ''}> Администратор</label>
+        <label class="check"><input type="checkbox" name="disabled" ${u.disabled ? 'checked' : ''}> Отключить вход</label>` : ''}
+      <button class="btn">${isNew ? 'Создать и показать логин' : 'Сохранить'}</button></form>
+    ${isNew ? '' : `<div class="actions"><button class="btn ghost" id="reset" data-id="${esc(u.id)}">Сбросить пароль</button>${self ? '' : `<button class="link red" id="delu" data-id="${esc(u.id)}">Удалить</button>`}</div>`}`);
+  bindForm('#uf', async (f) => {
+    const access = (f['courses[]'] || []).map((cid) => ({ courseId: cid, until: f['until_' + cid] || '' }));
+    const r = await api('POST', '/api/admin/users', { id: isNew ? '' : u.id, email: f.email, name: f.name, phone: f.phone, paid: f.paid, note: f.note, password: f.password || '', leadId, access, role: f.admin ? 'admin' : (isNew ? 'student' : (self ? u.role : 'student')), disabled: !!f.disabled });
+    await loadAdmin();
+    if (r.password) credentialsView(r.user, r.password); else { flash('Сохранено.'); go('#/admin/user/' + r.user.id); }
+  });
+  confirmClick('#reset', 'Сгенерировать новый пароль? Старый перестанет работать.', async (uid) => { const r = await api('POST', '/api/admin/users/' + uid + '/reset'); credentialsView(r.user, r.password); });
+  confirmClick('#delu', 'Удалить пользователя?', async (uid) => { await api('DELETE', '/api/admin/users/' + uid); await loadAdmin(); flash('Пользователь удалён.'); go('#/admin/users'); });
+}
+
+function viewLeads() {
+  const leads = A().leads.slice().reverse();
+  page(`<div class="row-head"><h1>Заявки</h1>${leads.length ? '<button class="btn ghost small" id="csv">Скачать CSV</button>' : ''}</div>
+    ${!leads.length ? '<div class="card empty">Заявок пока нет. Они появятся, когда посетители заполнят форму на сайте.</div>' :
+    `<table><tr><th>Дата</th><th>Имя / контакт</th><th>Курс</th><th>Сообщение</th><th>Статус и комментарий</th><th></th></tr>
+    ${leads.map((l) => `<tr class="st-${esc(l.status)}"><td class="small">${fmtDate(l.createdAt)}</td><td><b>${esc(l.name)}</b><br>${esc(l.contact)}</td>
+      <td class="small">${esc(courseTitle(l.courseId))}</td><td class="small">${esc(l.message)}</td>
+      <td><form class="cols leadst" data-id="${esc(l.id)}"><select name="status">${Object.entries(STATUSES).map(([k, v]) => `<option value="${k}" ${l.status === k ? 'selected' : ''}>${v}</option>`).join('')}</select>
+        <input name="comment" value="${esc(l.comment)}" placeholder="комментарий"><button class="btn small ghost">ок</button></form></td>
+      <td class="small"><a href="#/admin/user/new?lead=${esc(l.id)}">выдать доступ</a><br><button class="link red dellead" data-id="${esc(l.id)}">удалить</button></td></tr>`).join('')}</table>`}`);
+  document.querySelectorAll('.leadst').forEach((f) => f.onsubmit = async (e) => {
+    e.preventDefault(); const d = formData(f);
+    try { await api('POST', '/api/admin/leads/' + f.dataset.id, d); await loadAdmin(); flash('Заявка обновлена.'); render(); } catch (err) { alert(err.message); }
+  });
+  confirmClick('.dellead', 'Удалить заявку?', async (lid) => { await api('DELETE', '/api/admin/leads/' + lid); await loadAdmin(); render(); });
+  const csv = $('#csv'); if (csv) csv.onclick = () => {
+    const q = (v) => '"' + String(v ?? '').replace(/"/g, '""') + '"';
+    const rows = [['Дата', 'Имя', 'Контакт', 'Курс', 'Сообщение', 'Статус', 'Комментарий']].concat(A().leads.map((l) => [fmtDate(l.createdAt), l.name, l.contact, courseTitle(l.courseId), l.message, STATUSES[l.status], l.comment]));
+    const blob = new Blob(['﻿' + rows.map((r) => r.map(q).join(';')).join('\r\n')], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'leads.csv'; a.click();
+  };
+}
+
+function viewSettings() {
+  const s = A().settings;
+  page(`<form class="card" id="sf"><h1>Настройки сайта</h1>
+    <label>Название школы<input name="siteTitle" value="${esc(s.siteTitle)}"></label>
+    <label>Заголовок на главной<input name="heroTitle" value="${esc(s.heroTitle)}"></label>
+    <label>Текст под заголовком<textarea name="heroText" rows="3">${esc(s.heroText)}</textarea></label>
+    <div class="cols"><label class="grow">Ссылка для связи (https://t.me/...)<input name="contactLink" value="${esc(s.contactLink)}" placeholder="https://t.me/username"></label>
+    <label class="grow">Текст ссылки<input name="contactText" value="${esc(s.contactText)}"></label></div>
+    <button class="btn">Сохранить</button></form>`);
+  bindForm('#sf', async (d) => { await api('PUT', '/api/admin/settings', d); await loadAdmin(); await loadPublic(); flash('Настройки сохранены.'); render(); });
+}
+
+// ---------- маршрутизация ----------
+async function loadPublic() {
+  const d = await api('GET', '/api/public');
+  state = { settings: d.settings, courses: d.courses, user: d.user };
+}
+
+async function render() {
+  const [path, qs] = (location.hash.slice(1) || '/').split('?');
+  const q = new URLSearchParams(qs || ''), parts = path.split('/').filter(Boolean);
+  renderNav();
+  try {
+    if (!parts.length) return viewHome();
+    if (parts[0] === 'course') return viewCourse(parts[1]);
+    if (parts[0] === 'lesson') return await viewLesson(parts[1]);
+    if (parts[0] === 'login') return viewLogin(q.get('next'));
+    if (parts[0] === 'my') return await viewMy();
+    if (parts[0] === 'account') return viewAccount();
+    if (parts[0] === 'admin') {
+      if (!isAdmin()) return go('#/login?next=' + encodeURIComponent(location.hash));
+      if (!adminData) await loadAdmin();
+      const [, sec, id] = parts;
+      if (!sec) return viewDashboard();
+      if (sec === 'courses') return viewCourses();
+      if (sec === 'course') return viewCourseForm(id);
+      if (sec === 'lesson') return viewLessonForm(id, q);
+      if (sec === 'users') return viewUsers(q);
+      if (sec === 'user') return viewUserForm(id, q);
+      if (sec === 'leads') return viewLeads();
+      if (sec === 'settings') return viewSettings();
+    }
+    viewMessage('Страница не найдена');
+  } catch (e) {
+    if (e.status === 401) return go('#/login');
+    viewMessage('Ошибка', e.message);
+  }
+}
+
+window.addEventListener('hashchange', render);
+(async () => {
+  if (!SECURE) return page(`<div class="card center"><h1>Небезопасное подключение</h1><p>В index.html адрес API должен начинаться с <b>https://</b>.</p></div>`);
+  try { await loadPublic(); } catch (e) { return page(`<div class="card center"><h1>Сервер недоступен</h1><p>${esc(e.message)}</p></div>`); }
+  render();
+})();
+</script>
+</body>
+</html>
