@@ -362,7 +362,7 @@ tr.off td{opacity:.5}tr.st-new td:first-child{box-shadow:inset 3px 0 var(--acc)}
 .plan.best{border:2px solid var(--acc);position:relative}.plan.best:before{content:"Популярный";position:absolute;top:-12px;left:24px;background:var(--acc);color:#fff;font-size:12px;padding:3px 10px;border-radius:20px}
 .cta{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;border-radius:24px;padding:44px;display:grid;grid-template-columns:1fr 420px;gap:34px;align-items:center}
 .cta h2{font-size:30px;margin:0 0 10px}.cta p{color:rgba(255,255,255,.8)}
-.cta .card{margin:0;color:var(--ink)}
+.cta .card{margin:0;color:var(--ink)}.cta .card p{color:var(--muted)}
 details{border-bottom:1px solid var(--line);padding:16px 0}details summary{cursor:pointer;font-weight:600;font-size:17px;list-style:none;display:flex;justify-content:space-between;gap:10px}
 details summary:after{content:"+";color:var(--acc);font-size:22px;line-height:1}details[open] summary:after{content:"−"}
 details p{color:var(--muted);margin:10px 0 0}
@@ -467,6 +467,8 @@ body.in-shell .top-in{max-width:none}
 @media (max-width:1000px){.plans-edit{grid-template-columns:1fr}}
 .docrow{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line)}.docrow .grow{flex:1}.docrow label.btn{margin:0;cursor:pointer;white-space:nowrap}
 .show-m{display:none!important}
+.pnav .to-admin{color:#7c3aed;font-weight:600}
+.back-menu{background:none;border:0;color:var(--acc);font-weight:600;padding:4px 0 14px;cursor:pointer;font-size:14px}
 .drawer-bg{display:none}
 @media(max-width:1000px){
   .shell,.shell.has-left{grid-template-columns:1fr}
@@ -476,17 +478,37 @@ body.in-shell .top-in{max-width:none}
   .panel.open{transform:none}
   .drawer-bg.on{display:block;position:fixed;inset:0;background:rgba(5,12,28,.45);z-index:30}
   .show-m{display:inline-block!important}
+  .pnav .show-m,.back-menu.show-m{display:block!important}
+  .menu-btn{background:var(--acc)!important;color:#fff!important;border-radius:10px;padding:8px 14px!important;font-weight:600}
 }
 @media(max-width:640px){.hide-m{display:none!important}}
 @media(max-width:900px){
   .expert,.cta,.buy,.lesson-layout,.two{grid-template-columns:1fr}.avatar{max-width:220px}
   .foot-grid{grid-template-columns:1fr 1fr}.side{position:static}.stats{grid-template-columns:repeat(2,1fr)}
 }
-@media(max-width:640px){
+.faq-h{font-size:34px}
+@media(max-width:640px){.faq-h{font-size:24px!important}
   .wrap{padding:0 16px}.page{padding:24px 16px 56px}
   .hero{padding:60px 0 56px}.hero h1{font-size:36px}.hero p{font-size:17px}.sec{padding:56px 0}.sec-head h2{font-size:27px}
-  .cta{padding:26px}.foot-grid{grid-template-columns:1fr}
   table{display:block;overflow-x:auto}
+  /* лицевая страница на телефоне */
+  .hero{padding:36px 0 34px}.hero h1{font-size:30px;line-height:1.15;margin-bottom:12px}.hero p{font-size:16px;line-height:1.55}
+  .hero .eyebrow{font-size:12px;padding:6px 12px}
+  .hero .actions{flex-direction:column;align-items:stretch;gap:10px;margin-top:22px}.hero .actions .btn{width:100%;text-align:center;justify-content:center}
+  .hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:28px;padding-top:20px;border-top:1px solid rgba(255,255,255,.15)}
+  .hero-stats b{font-size:19px;white-space:nowrap}.hero-stats span{font-size:12px;line-height:1.3;display:block;margin-top:2px}
+  .sec{padding:42px 0}.sec-head{margin-bottom:20px}.sec-head h2{font-size:25px;line-height:1.2}.sec-head p{font-size:15px}
+  .expert{display:block}.expert .avatar{width:84px;max-width:84px;font-size:30px;border-radius:22px;float:left;margin:0 16px 8px 0}
+  .expert h2{font-size:24px!important;line-height:1.2;margin-top:4px!important}.expert .kicker{margin-top:6px}
+  .expert p{clear:both}.expert p.muted{clear:none}
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;clear:both}
+  .facts>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 6px;text-align:center}
+  .facts b{font-size:19px}.facts span{font-size:11.5px;line-height:1.3;display:block;margin-top:2px}
+  .modules{gap:10px}.module{padding:16px 18px}.module h3{font-size:16px;margin:2px 0 4px}
+  .plans{gap:14px}.plan{padding:20px}.plan .price{font-size:28px}
+  .cta{padding:22px 16px;border-radius:18px;gap:18px}.cta h2{font-size:24px}.cta .card{padding:18px}
+  .foot-grid{grid-template-columns:1fr 1fr;gap:26px 16px}.foot-grid>div:first-child,.foot-grid>div:last-child{grid-column:1/-1}
+  .foot{padding-top:36px}
 }
 </style>
 <script>
@@ -680,8 +702,7 @@ function renderHeader(shell) {
   $('#brand').innerHTML = `<b>${esc(SITE.brand)}</b><small>${esc(SITE.brandSub)}</small>`;
   let links = '';
   if (shell) {
-    if (isStaff()) links += `<button class="nl show-m" data-drawer="left">☰ Админ-панель</button>`;
-    links += `<button class="nl show-m" data-drawer="right">👤 Кабинет</button>`;
+    links += `<button class="nl show-m menu-btn" data-drawer="right">☰ Меню</button>`;
   } else if (p === '/main' || p === '/') {
     links = `<button class="nl hide-m" data-scroll="about">О проекте</button><button class="nl hide-m" data-scroll="expert">Эксперт</button><button class="nl hide-m" data-scroll="program">Программа</button><button class="nl hide-m" data-scroll="pricing">Стоимость</button>`;
     // на главной кнопка «Войти» остаётся всегда; вошедшего она сразу ведёт в его меню
@@ -729,11 +750,14 @@ function page(html, opts = {}) {
       <div class="drawer-bg" id="dbg"></div></div>`;
     $('#dbg').onclick = () => toggleDrawer();
     const lo = $('#plogout'); if (lo) lo.onclick = logout;
+    bindPanelDrawers();
   } else {
     $('#app').innerHTML = opts.full ? html : `<div class="wrap page">${f}${html}</div>`;
   }
   if (!opts.keepScroll && !softRender) window.scrollTo(0, 0);
 }
+// Кнопки внутри шторок: из главного меню — в админ-панель и обратно.
+function bindPanelDrawers() { document.querySelectorAll('.panel [data-drawer]').forEach((el) => el.onclick = () => toggleDrawer(el.dataset.drawer)); }
 function toggleDrawer(side) {
   ['left', 'right'].forEach((s) => { const el = document.getElementById('p' + s); if (el) el.classList.toggle('open', s === side && !el.classList.contains('open')); });
   const any = document.querySelector('.panel.open'); const bg = $('#dbg'); if (bg) bg.classList.toggle('on', !!any);
@@ -741,7 +765,7 @@ function toggleDrawer(side) {
 
 function adminPanel() {
   const p = currentPath(), on = (pre, exact) => (exact ? p === pre : p.startsWith(pre)) ? 'on' : '';
-  return `<div class="panel-title">Админ-панель</div>
+  return `<button class="show-m back-menu" data-drawer="right">← Главное меню</button><div class="panel-title">Админ-панель</div>
     <nav class="pnav">
       <a class="${on('/admin', true)}" href="${L('/admin')}">📊 Обзор</a>
       <a class="${on('/admin/course') || on('/admin/lesson')}" href="${L('/admin/courses')}">🎓 Модерация курса</a>
@@ -766,6 +790,7 @@ function cabinetPanel() {
       <a class="${p === '/learn/study' ? 'on' : ''}" href="${L('/learn/study')}">📖 Обучение</a>
       <a ${cur}>💬 Связь с куратором</a>
       <a class="${p === '/account' ? 'on' : ''}" href="${L('/account')}">🔑 Смена пароля</a>
+      ${isStaff() ? `<button class="show-m to-admin" data-drawer="left">🛠 Панель администратора</button>` : ''}
       <button id="plogout">↩ Выйти</button></nav>
     ${lessons.length ? `<div class="panel-title" style="margin-top:18px">Уроки</div><ol class="lessons compact">${lessons.map((l) =>
       `<li class="${p === '/lesson/' + l.id ? 'cur' : ''} ${l.locked ? 'locked' : ''}">${l.locked ? `<span>${esc(l.title)} 🔒</span>` : `<a href="${L('/lesson/' + l.id)}">${esc(l.title)}</a>${l.viewed ? ' <span class="tag done">✓</span>' : ''}`}</li>`).join('')}</ol>` : ''}`;
@@ -860,7 +885,7 @@ function viewMain() {
   </div></section>
 
   <section class="sec" id="faq"><div class="wrap"><div class="two">
-    <div><div class="kicker">FAQ</div><h2 style="font-size:34px;margin-top:0">Частые вопросы</h2>${S.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div>
+    <div><div class="kicker">FAQ</div><h2 class="faq-h" style="margin-top:0">Частые вопросы</h2>${S.faq.map(([q, a]) => `<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div>
     <div class="cta" style="grid-template-columns:1fr"><div><h2>Остались вопросы?</h2><p>Оставьте контакт, и мы расскажем подробнее о курсе.</p></div>${leadForm({ title: 'Получить консультацию', button: 'Отправить' })}</div>
   </div></div></section>`, { full: true });
   bindLeads();
@@ -950,7 +975,7 @@ async function viewLesson(id) {
     box.innerHTML = `<div class="card hw"><h3>Материалы к уроку</h3><div class="libgrid">${files.map((it) => `<div class="libfile"><span class="ico">${libIcon(it)}</span><div class="grow"><b>${esc(it.title)}</b>${it.note ? `<div class="muted small">${esc(it.note)}</div>` : ''}</div>${it.kind === 'file' ? `<button class="btn ghost small" data-dl="${esc(it.id)}" data-name="${esc(it.fileName)}">Скачать</button>` : it.url ? `<a class="btn ghost small" href="${esc(it.url)}" target="_blank" rel="noopener" data-ext>Открыть</a>` : ''}</div>`).join('')}</div></div>`;
     bindDownloads(box);
   }).catch(() => {});
-  if (shellMode) loadPublic().then(() => { const r = $('#pright'); if (r) { r.innerHTML = cabinetPanel(); const lo = $('#plogout'); if (lo) lo.onclick = logout; } }).catch(() => {});
+  if (shellMode) loadPublic().then(() => { const r = $('#pright'); if (r) { r.innerHTML = cabinetPanel(); const lo = $("#plogout"); if (lo) lo.onclick = logout; bindPanelDrawers(); } }).catch(() => {});
 }
 function viewMessage(title, text) { page(`<div class="card center"><h1>${esc(title)}</h1>${text ? `<p>${esc(text)}</p>` : ''}<p><a class="btn" href="${L(homeFor())}">На главную</a></p></div>`); }
 
@@ -1680,7 +1705,7 @@ async function ping() {
   state.v = r.v;
   if (path.startsWith('/admin')) return;
   if (busy || path.startsWith('/lesson/')) {
-    const pr = $('#pright'); if (pr) { pr.innerHTML = cabinetPanel(); const lo = $('#plogout'); if (lo) lo.onclick = logout; }
+    const pr = $('#pright'); if (pr) { pr.innerHTML = cabinetPanel(); const lo = $("#plogout"); if (lo) lo.onclick = logout; bindPanelDrawers(); }
     return;
   }
   softRender = true; try { await render(); } finally { softRender = false; }
