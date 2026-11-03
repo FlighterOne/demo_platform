@@ -251,18 +251,20 @@
 </script>
 <style>
 :root{
-  --bg:#f4f7fd;--bg2:#e9effb;--card:#ffffff;--ink:#0b1b3a;--muted:#5a6b8c;--line:#dbe3f3;
-  --acc:#1d4ed8;--acc-ink:#ffffff;--acc2:#e3ebff;--acc-soft:#2f62e8;
-  --ok:#1f8a4c;--ok-bg:#e6f6ec;--err:#c62a2a;--err-bg:#fdecec;--hw:#fff8e1;--hw-line:#f1dc9b;
-  --hero1:#0b1b3a;--hero2:#1d3f8f;--foot:#0a1630;--foot-ink:#c9d5ee;--foot-muted:#8296bd;
-  --shadow:0 10px 30px rgba(15,40,100,.08);--r:16px;
+  /* скандинавская палитра: белый, чёрный, синий акцент */
+  --bg:#f7f7f5;--bg2:#efeee9;--card:#ffffff;--ink:#141414;--muted:#6b6a65;--line:#e3e1db;
+  --acc:#2747c7;--acc-ink:#ffffff;--acc2:#eef1fb;--acc-soft:#4864d6;
+  --ok:#2f7d4f;--ok-bg:#e9f4ed;--err:#c0352b;--err-bg:#fbecea;--hw:#fbf6e6;--hw-line:#ecdca8;
+  --hero1:#141414;--hero2:#232322;--foot:#141414;--foot-ink:#ecebe6;--foot-muted:#9b9a94;
+  --gear:#2747c7;--shadow:0 1px 2px rgba(20,20,20,.04);--r:10px;
 }
 :root[data-theme="dark"]{
-  --bg:#081226;--bg2:#0c1a35;--card:#0f2042;--ink:#e8eefc;--muted:#97a9cc;--line:#1d3361;
-  --acc:#4c86ff;--acc-ink:#ffffff;--acc2:#142b58;--acc-soft:#6a9bff;
-  --ok:#5fd394;--ok-bg:#0f3326;--err:#ff7b7b;--err-bg:#3a1520;--hw:#2a2615;--hw-line:#4a4220;
-  --hero1:#050d1f;--hero2:#123172;--foot:#050c1c;--foot-ink:#c9d5ee;--foot-muted:#7d90b8;
-  --shadow:0 10px 30px rgba(0,0,0,.35);
+  /* тёмная тема: чёрный и жёлтый */
+  --bg:#0e0e0d;--bg2:#181817;--card:#151514;--ink:#f3f1ea;--muted:#9e9b91;--line:#2a2a27;
+  --acc:#f5c400;--acc-ink:#141414;--acc2:#29240f;--acc-soft:#ffd633;
+  --ok:#6fd49a;--ok-bg:#12291c;--err:#ff8072;--err-bg:#331715;--hw:#262212;--hw-line:#4a4220;
+  --hero1:#0a0a0a;--hero2:#1a1a18;--foot:#0a0a0a;--foot-ink:#ecebe6;--foot-muted:#8c8a82;
+  --gear:#3d63ff;--shadow:0 1px 2px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
@@ -517,6 +519,53 @@ body.in-shell .top-in{max-width:none}
   .foot-grid{grid-template-columns:1fr 1fr;gap:26px 16px}.foot-grid>div:first-child,.foot-grid>div:last-child{grid-column:1/-1}
   .foot{padding-top:36px}
 }
+:root[data-theme="dark"] .checks li:before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 10.5l2.5 2.5L14 7.5' fill='none' stroke='%23f5c400' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.checks li:before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 10.5l2.5 2.5L14 7.5' fill='none' stroke='%232747c7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+/* ===== Скандинавский стиль: плоские кнопки, тонкие линии, меньше скруглений ===== */
+.btn{border-radius:8px;font-weight:600;letter-spacing:.01em;box-shadow:none;transition:background .15s,color .15s,border-color .15s}
+.btn:hover{filter:none;background:color-mix(in srgb,var(--acc) 86%,var(--ink))}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn.ghost:hover{background:var(--bg2);border-color:var(--ink)}
+.btn.small{border-radius:7px}
+.btn.light{background:#fff;color:#141414}.btn.light:hover{background:#ecebe6}
+.btn.outline{border-radius:8px}.btn.outline:hover{background:rgba(255,255,255,.08)}
+.card{border-radius:var(--r)}
+input,textarea,select{border-radius:7px;background:var(--card)}
+input:focus,textarea:focus,select:focus{outline:2px solid color-mix(in srgb,var(--acc) 30%,transparent);outline-offset:0}
+.tabs{border-radius:9px;background:var(--bg2)}.tabs a{border-radius:7px}.tabs a.on{box-shadow:none;border:1px solid var(--line)}
+.tag{border-radius:5px}
+.hero{background:var(--hero1)}
+.hero .eyebrow,.eyebrow{border-radius:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}
+.cta{background:var(--hero1);border-radius:14px}
+.avatar{background:var(--acc);color:var(--acc-ink);border-radius:14px;box-shadow:none}
+.plan.best:before{color:var(--acc-ink);border-radius:5px}
+.kicker{letter-spacing:.14em}
+.subnav{border-radius:9px}.subnav a{border-radius:6px}
+table{border-radius:var(--r)}
+.drawer-bg.on{background:rgba(10,10,10,.45)!important}
+.me .ava{background:var(--acc);color:var(--acc-ink)}
+.theme{border-radius:50%}
+.theme.gear{background:var(--gear);border-color:var(--gear);color:#fff}.theme.gear:hover{filter:brightness(1.1);border-color:var(--gear)}
+@media(max-width:1000px){
+  .theme.gear.show-m{display:inline-grid!important}
+  .menu-btn{color:var(--acc-ink)!important;border-radius:8px!important}
+}
+@media(max-width:640px){
+  /* вкладки «Модерации курса», «Заявок» и т. п. — столбиком, без вылезания за экран */
+  .tabs.seg{flex-direction:column;max-width:none}.tabs.seg a{white-space:normal;text-align:left;padding:10px 12px}
+  .main-area{padding:20px 14px 48px}
+  .main-area h1{font-size:26px}
+  .row-head{flex-wrap:wrap;gap:10px}
+  /* таблицы — карточками */
+  .main-area table.mcards,.main-area table.mcards tbody,.main-area table.mcards tr,.main-area table.mcards td{display:block;width:100%}
+  .main-area table.mcards{border:0;background:none;overflow:visible;box-shadow:none}
+  .main-area table.mcards thead,.main-area table.mcards tr:has(> th){display:none}
+  .main-area table.mcards tr{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:10px 14px;margin-bottom:10px}
+  .main-area table.mcards td{border:0!important;padding:5px 0!important;text-align:left!important;display:flex;gap:12px;justify-content:space-between;align-items:baseline}
+  .main-area table.mcards td[data-label]:before{content:attr(data-label);color:var(--muted);font-size:13px;flex:none;max-width:45%}
+  .main-area table.mcards td > *{text-align:right}
+  .main-area table.mcards td:not([data-label]){justify-content:flex-end}
+  .finder{flex-wrap:wrap}
+}
 </style>
 <script>
   // тема применяется до отрисовки, чтобы не было вспышки
@@ -689,6 +738,7 @@ const allLessons = () => state.courses.flatMap((c) => c.lessons.map((l) => ({ ..
 
 // ---------- тема ----------
 const ICON_SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const ICON_GEAR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
 const ICON_MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
 const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
 function toggleTheme() {
@@ -709,6 +759,7 @@ function renderHeader(shell) {
   $('#brand').innerHTML = `<b>${esc(SITE.brand)}</b><small>${esc(SITE.brandSub)}</small>`;
   let links = '';
   if (shell) {
+    if (isStaff()) links += `<button class="theme gear show-m" data-drawer="left" title="Админ-панель" aria-label="Открыть админ-панель">${ICON_GEAR}</button>`;
     links += `<button class="nl show-m menu-btn" data-drawer="right">☰ Меню</button>`;
   } else if (p === '/main' || p === '/') {
     links = `<button class="nl hide-m" data-scroll="about">О проекте</button><button class="nl hide-m" data-scroll="expert">Эксперт</button><button class="nl hide-m" data-scroll="program">Программа</button><button class="nl hide-m" data-scroll="pricing">Стоимость</button>`;
@@ -758,10 +809,20 @@ function page(html, opts = {}) {
     $('#dbg').onclick = () => toggleDrawer();
     const lo = $('#plogout'); if (lo) lo.onclick = logout;
     bindPanelDrawers();
+    labelTables();
   } else {
     $('#app').innerHTML = opts.full ? html : `<div class="wrap page">${f}${html}</div>`;
   }
   if (!opts.keepScroll && !softRender) window.scrollTo(0, 0);
+}
+// На телефоне строки таблиц показываются карточками: подписываем ячейки названиями колонок.
+function labelTables() {
+  document.querySelectorAll('.main-area table:not(.atable)').forEach((t) => {
+    const heads = Array.from(t.querySelectorAll('thead th, tr:first-child th')).map((th) => th.textContent.trim());
+    if (!heads.length) return;
+    t.classList.add('mcards');
+    t.querySelectorAll('tr').forEach((tr) => Array.from(tr.children).forEach((td, i) => { if (td.tagName === 'TD' && heads[i] && !td.hasAttribute('colspan')) td.dataset.label = heads[i]; }));
+  });
 }
 // Кнопки внутри шторок: из главного меню — в админ-панель и обратно.
 function bindPanelDrawers() { document.querySelectorAll('.panel [data-drawer]').forEach((el) => el.onclick = () => toggleDrawer(el.dataset.drawer)); }
@@ -797,7 +858,6 @@ function cabinetPanel() {
       <a class="${p === '/learn/study' ? 'on' : ''}" href="${L('/learn/study')}">📖 Обучение</a>
       <a ${cur}>💬 Связь с куратором</a>
       <a class="${p === '/account' ? 'on' : ''}" href="${L('/account')}">🔑 Смена пароля</a>
-      ${isStaff() ? `<button class="show-m to-admin" data-drawer="left">🛠 Панель администратора</button>` : ''}
       <button id="plogout">↩ Выйти</button></nav>
     ${lessons.length ? `<div class="panel-title" style="margin-top:18px">Уроки</div><ol class="lessons compact">${lessons.map((l) =>
       `<li class="${p === '/lesson/' + l.id ? 'cur' : ''} ${l.locked ? 'locked' : ''}">${l.locked ? `<span>${esc(l.title)} 🔒</span>` : `<a href="${L('/lesson/' + l.id)}">${esc(l.title)}</a>${l.viewed ? ' <span class="tag done">✓</span>' : ''}`}</li>`).join('')}</ol>` : ''}`;
