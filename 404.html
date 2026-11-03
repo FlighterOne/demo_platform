@@ -43,6 +43,9 @@
       ],
       facts: [['---+', 'подписчиков в блоге'], ['- лет', 'практики в нише'], ['---+', 'довольных учеников']],
       blogLink: '',                 // ссылка на блог эксперта (https://...), кнопка появится в блоке «Об авторе»
+      photo: '',                    // фото загружается в «Редакции сайта» → «Об эксперте»
+      achievements: [],             // достижения и регалии, по одному в строке
+      links: [],                    // соцсети: [['Telegram', 'https://t.me/...'], ...]
     },
 
     // 3. Программа курса
@@ -352,6 +355,10 @@ tr.off td{opacity:.5}tr.st-new td:first-child{box-shadow:inset 3px 0 var(--acc)}
 .kicker{color:var(--acc);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px}
 .expert{display:grid;grid-template-columns:320px 1fr;gap:44px;align-items:center}
 .avatar{aspect-ratio:1;border-radius:28px;background:linear-gradient(135deg,var(--acc),var(--hero2));display:grid;place-items:center;color:#fff;font-size:72px;font-weight:800;box-shadow:var(--shadow)}
+.avatar{overflow:hidden}.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.exp-ach{margin:24px 0 0}.exp-links{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
+.exp-photo{display:flex;gap:16px;align-items:center;margin-bottom:14px}.exp-photo .avatar{width:96px;flex:none;font-size:32px;border-radius:22px}
+.sub-h{margin:16px 0 6px;font-size:14px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .facts{display:flex;gap:28px;flex-wrap:wrap;margin-top:22px}.facts b{display:block;font-size:26px;color:var(--acc)}.facts span{color:var(--muted);font-size:14px}
 .modules{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
 .module{position:relative}.module .num{color:var(--acc);font-weight:700;font-size:14px;margin-bottom:6px}
@@ -860,11 +867,12 @@ function viewMain() {
   </div></section>
 
   <section class="sec" id="expert"><div class="wrap expert">
-    <div class="avatar">${esc(S.expert.initials)}</div>
+    <div class="avatar">${expertPhoto(S.expert) ? `<img src="${esc(S.expert.photo)}" alt="${esc(S.expert.name)}">` : esc(S.expert.initials)}</div>
     <div><div class="kicker">${esc(S.expert.title)}</div><h2 style="font-size:34px;margin:0 0 6px">${esc(S.expert.name)}</h2>
       <p class="muted" style="margin-top:0">${esc(S.expert.role)}</p>${S.expert.text.map((t) => `<p>${esc(t)}</p>`).join('')}
       <div class="facts">${S.expert.facts.map(([b, s]) => `<div><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join('')}</div>
-      ${/^https:\/\//.test(S.expert.blogLink || '') ? `<p style="margin-top:18px"><a class="btn ghost" href="${esc(S.expert.blogLink)}" target="_blank" rel="noopener" data-ext>Блог эксперта ↗</a></p>` : ''}</div>
+      ${(S.expert.achievements || []).length ? `<ul class="checks exp-ach">${S.expert.achievements.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+      ${expertLinks(S.expert).length ? `<p class="exp-links">${expertLinks(S.expert).map(([t, u], i) => `<a class="btn ${i ? 'ghost small' : 'ghost'}" href="${esc(u)}" target="_blank" rel="noopener" data-ext>${esc(t)} ↗</a>`).join('')}</p>` : ''}</div>
   </div></section>
 
   <section class="sec alt" id="program"><div class="wrap">
@@ -1535,6 +1543,24 @@ function viewLeads(q) {
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'leads.csv'; a.click();
   };
 }
+const expertPhoto = (e) => /^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test((e && e.photo) || '');
+const expertLinks = (e) => [['Блог эксперта', e.blogLink]].concat(Array.isArray(e.links) ? e.links : []).filter((x) => Array.isArray(x) && x[0] && /^https:\/\//.test(x[1] || ''));
+// Фото эксперта: ужимаем в браузере до 480×480 JPEG и храним прямо в настройках сайта (~40–70 КБ).
+function shrinkPhoto(file) {
+  return new Promise((ok, bad) => {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return bad(new Error('Нужна картинка JPG, PNG или WEBP'));
+    if (file.size > 15 << 20) return bad(new Error('Фото больше 15 МБ'));
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const side = Math.min(img.width, img.height), out = Math.min(480, side), c = document.createElement('canvas');
+      c.width = c.height = out;
+      c.getContext('2d').drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, out, out);
+      URL.revokeObjectURL(url); ok(c.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); bad(new Error('Не удалось открыть картинку')); };
+    img.src = url;
+  });
+}
 // ---------- Редакция сайта ----------
 const DOC_KINDS = [['privacy', 'Политика конфиденциальности'], ['terms', 'Пользовательское соглашение'], ['consent', 'Согласие на обработку ПД']];
 async function readTextFile(file) {
@@ -1557,16 +1583,24 @@ function viewSite() {
       ${area('heroText', 'Описание проекта', S.hero.text)}
       ${pairs('hs', S.hero.stats, 'Цифра', 'Подпись')}</div>
 
-    <div class="card"><h3>Эксперт и куратор</h3>
-      <div class="cols">${inp('expName', 'Имя эксперта', S.expert.name, { max: 120 })}${inp('expInitials', 'Инициалы на аватаре', S.expert.initials, { max: 4 })}</div>
+    <div class="card"><h3>Об эксперте</h3>
+      <p class="muted small" style="margin-top:0">Этот блок видят посетители на главной странице в разделе «Эксперт».</p>
+      <div class="exp-photo"><div class="avatar" id="expPrev">${expertPhoto(S.expert) ? `<img src="${esc(S.expert.photo)}" alt="">` : esc(S.expert.initials)}</div>
+        <div><b>Фото эксперта</b><div class="muted small">Квадратное или портретное, лицо по центру. JPG, PNG или WEBP — сайт сам уменьшит его.</div>
+        <div class="actions" style="margin-top:8px"><label class="btn ghost small">Загрузить фото<input type="file" id="expPhoto" accept="image/jpeg,image/png,image/webp" style="display:none"></label>
+        <button type="button" class="link red" id="expPhotoDel" ${expertPhoto(S.expert) ? '' : 'hidden'}>убрать фото</button></div></div></div>
+      <input type="hidden" name="expPhotoData" value="${expertPhoto(S.expert) ? esc(S.expert.photo) : ''}">
+      <div class="cols">${inp('expName', 'Имя эксперта', S.expert.name, { max: 120 })}${inp('expInitials', 'Инициалы (если нет фото)', S.expert.initials, { max: 4 })}</div>
       <div class="cols">${inp('expTitle', 'Заголовок блока', S.expert.title, { max: 120 })}${inp('expRole', 'Кто он (одна строка)', S.expert.role, { max: 200 })}</div>
       ${area('expText', 'Рассказ об эксперте (абзацы через пустую строку)', S.expert.text.join('\n\n'), 6)}
-      ${pairs('ef', S.expert.facts, 'Факт', 'Подпись')}
-      <p class="muted small" style="margin:0">Связь с куратором, поддержка и FAQ — в «Модерации курса» → «Экспертная помощь и поддержка». Тарифы, сроки и программа — там же, во вкладке «Информация о курсе».</p></div>
-
-    <div class="card"><h3>Ссылки</h3>
-      ${inp('blogLink', 'Блог эксперта', S.expert.blogLink, { grow: false, ph: 'https://t.me/... или https://vk.com/...', max: 500 })}
-      <p class="muted small" style="margin:0">Ссылка должна начинаться с https://</p></div>
+      <h4 class="sub-h">Цифры под рассказом</h4>
+      ${pairs('ef', S.expert.facts, 'Цифра', 'Подпись')}
+      <h4 class="sub-h">Достижения и регалии</h4>
+      ${area('expAch', 'По одному в строке, необязательно (например: «Автор книги…», «Спикер конференции…»)', (S.expert.achievements || []).join('\n'), 4)}
+      <h4 class="sub-h">Блог и соцсети</h4>
+      ${inp('blogLink', 'Блог эксперта (главная кнопка)', S.expert.blogLink, { grow: false, ph: 'https://t.me/... или https://vk.com/...', max: 500 })}
+      ${[0, 1, 2].map((i) => `<div class="cols">${inp(`el${i}t`, `Соцсеть ${i + 1}`, ((S.expert.links || [])[i] || [])[0] || '', { max: 40, ph: ['Telegram', 'YouTube', 'ВКонтакте'][i] })}${inp(`el${i}u`, 'Ссылка', ((S.expert.links || [])[i] || [])[1] || '', { max: 500, ph: 'https://...' })}</div>`).join('')}
+      <p class="muted small" style="margin:0">Ссылки должны начинаться с https://. Связь с куратором, поддержка и FAQ — в «Модерации курса» → «Экспертная помощь и поддержка».</p></div>
 
     <div class="card"><h3>Данные ИП и почта</h3>
       ${inp('company', 'Название ИП', S.company, { grow: false, max: 200 })}
@@ -1601,6 +1635,12 @@ function viewSite() {
     const blog = String(f.blogLink || '').trim();
     if (blog && !/^https:\/\//.test(blog)) throw new Error('Ссылка на блог должна начинаться с https://');
     set('expert.blogLink', blog);
+    const photo = String(f.expPhotoData || '');
+    set('expert.photo', expertPhoto({ photo }) ? photo : '');
+    set('expert.achievements', String(f.expAch || '').split('\n').map((x) => x.trim()).filter(Boolean).slice(0, 10).map((x) => x.slice(0, 200)));
+    const links = [0, 1, 2].map((i) => [String(f[`el${i}t`] || '').trim(), String(f[`el${i}u`] || '').trim()]).filter(([t, u]) => t || u);
+    links.forEach(([t, u]) => { if (!t) throw new Error('Укажите название соцсети'); if (!/^https:\/\//.test(u)) throw new Error(`Ссылка «${t}» должна начинаться с https://`); });
+    set('expert.links', links);
     ['company', 'inn', 'ogrnip', 'address', 'email', 'docsDate'].forEach((k) => set(k, keep(f[k], def[k])));
     if (f.inn && !/^\d{10}(\d{2})?$/.test(String(f.inn).trim())) throw new Error('ИНН — 10 или 12 цифр');
     if (f.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(f.email).trim())) throw new Error('Проверьте почту проекта');
@@ -1608,6 +1648,13 @@ function viewSite() {
     await api('PUT', '/api/admin/settings', { ...st, site: over });
     await loadAdmin(); await loadPublic(); flash('Сайт обновлён.'); render();
   });
+  const ph = $('#expPhoto'), phDel = $('#expPhotoDel'), phPrev = $('#expPrev'), phData = document.querySelector('[name=expPhotoData]');
+  if (ph) ph.onchange = async () => {
+    const file = ph.files[0]; if (!file) return;
+    try { const d = await shrinkPhoto(file); phData.value = d; phPrev.innerHTML = `<img src="${d}" alt="">`; phDel.hidden = false; }
+    catch (e) { alert(e.message); } finally { ph.value = ''; }
+  };
+  if (phDel) phDel.onclick = () => { phData.value = ''; phPrev.textContent = SITE.expert.initials; phDel.hidden = true; };
   const reset = $('#sitereset'); if (reset) reset.onclick = async () => {
     if (!confirm('Вернуть тексты и реквизиты к шаблону из index.html? Курс, ссылки, FAQ и документы останутся.')) return;
     try { await api('PUT', '/api/admin/settings', { ...st, site: isObj(st.site) && st.site.faq ? { faq: st.site.faq } : {} }); await loadAdmin(); await loadPublic(); flash('Тексты возвращены к шаблону.'); render(); } catch (e) { alert(e.message); }
