@@ -521,6 +521,8 @@ body.in-shell .top-in{max-width:none}
 }
 :root[data-theme="dark"] .checks li:before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 10.5l2.5 2.5L14 7.5' fill='none' stroke='%23f5c400' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
 .checks li:before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 10.5l2.5 2.5L14 7.5' fill='none' stroke='%23141414' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.plan-meta{margin:0 0 14px;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:14px}
+.plan-meta div{display:flex;justify-content:space-between;gap:10px;padding:3px 0}.plan-meta dt{color:var(--muted)}.plan-meta dd{margin:0;font-weight:600;text-align:right}
 /* ===== Скандинавский стиль: плоские кнопки, тонкие линии, меньше скруглений ===== */
 .btn{border-radius:8px;font-weight:600;letter-spacing:.01em;box-shadow:none;transition:background .15s,color .15s,border-color .15s}
 .btn:hover{filter:none;background:color-mix(in srgb,var(--acc) 86%,var(--ink))}
@@ -598,14 +600,21 @@ function mergeDeep(base, over) {
   }
   return base;
 }
+// Под ценой тарифа на странице покупки: длительность курса, уроки и доступ к материалам.
+function planMeta(p) {
+  const f = SITE.courseFacts || {}, rows = [];
+  if (f.duration) rows.push(['Длительность курса', f.duration]);
+  if (f.lessons) rows.push(['Видео и практика', f.lessons]);
+  const per = (p.items || []).find((x) => /^Доступ: /.test(x));
+  rows.push(['Доступ к материалам', per ? per.replace(/^Доступ: /, '') : '24/7']);
+  return `<dl class="plan-meta">${rows.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`;
+}
 // Информация о курсе из «Модерации курса» (тарифы, программа, сроки) заменяет соответствующие блоки шаблона.
 function applyCourse(c) {
   if (!c) return;
   if (c.plans && c.plans.length) SITE.pricing.plans = c.plans.map((p, i) => ({ name: p.name || 'Тариф ' + (i + 1), price: p.price || '-----', items: [...(p.items || []), ...(p.period ? ['Доступ: ' + p.period] : [])], best: i === 1 }));
   if (c.program && c.program.length) SITE.program.modules = c.program.map((m, i) => ['Модуль ' + (i + 1), m.title, m.text || '']);
-  if (c.duration) SITE.hero.stats[0] = [c.duration, SITE.hero.stats[0][1]];
-  if (c.lessonsCount) SITE.hero.stats[1] = [c.lessonsCount, SITE.hero.stats[1][1]];
-  if (c.startDate) SITE.hero.eyebrow = 'Онлайн-курс · старт потока ' + c.startDate.split('-').reverse().join('.');
+  SITE.courseFacts = { duration: c.duration || '', lessons: c.lessonsCount || '' };
 }
 function applySite(over) {
   const fresh = mergeDeep(JSON.parse(JSON.stringify(SITE_DEFAULT)), over);
@@ -980,7 +989,7 @@ async function viewBuying() {
 
     <section id="buy"><div class="kicker" style="margin-left:4px">Шаг 3 · Покупка</div><h2 style="margin-top:4px">${esc(SITE.pricing.title)}</h2>
       <div class="plans">${SITE.pricing.plans.slice(0, 3).map((p, i) => `<div class="card plan ${p.best ? 'best' : ''}"><h3>${esc(p.name)}</h3><div class="price">${esc(p.price)}</div>
-        <ul class="checks">${p.items.map((x) => `<li>${esc(x)}</li>`).join('')}</ul><button class="btn ${p.best ? '' : 'ghost'} pick" data-rank="${i + 1}">Выбрать</button></div>`).join('')}</div>
+        ${planMeta(p)}<ul class="checks">${p.items.filter((x) => !/^Доступ: /.test(x)).map((x) => `<li>${esc(x)}</li>`).join('')}</ul><button class="btn ${p.best ? '' : 'ghost'} pick" data-rank="${i + 1}">Выбрать</button></div>`).join('')}</div>
       <div id="buyform" style="max-width:520px;margin:20px auto 0">${leadForm({ title: 'Оформить покупку', text: 'Оплата по реквизитам: после заявки мы свяжемся с вами в течение дня. После оплаты тариф обновится автоматически.', plans: true, rank: 2, button: 'Купить курс' })}</div>
     </section>
 
